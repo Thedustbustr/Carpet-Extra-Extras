@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.thedustbuster.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "SleepStatusMixin",
+    "LoggerRegistryMixin",
+    "HUDControllerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
