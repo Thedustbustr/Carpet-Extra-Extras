@@ -1,23 +1,22 @@
 package net.thedustbuster.adaptors.carpet;
 
-import carpet.CarpetServer;
-import carpet.logging.LoggerRegistry;
-import net.thedustbuster.BetterCarpetBots;
+import net.thedustbuster.CarpetExtraExtrasServer;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
 public final class FieldHelper {
   @Nullable
-  public static Field getField(Class<?> c, String name) {
-    return readField(c, name);
-  }
+  public static Field getField(Class<?> c, String name) { return readField(c, name); }
 
   @Nullable
-  public static Field getField(Class<?> c, String name, boolean forceAccessible) {
-    Field f = readField(c, name);
-    if (f == null) { return null; }
-    else if (!forceAccessible) { return f; }
+  public static Field getField(Class<?> c, String n, boolean fa) { return getField(c, n, fa, false); }
+
+  @Nullable
+  public static Field getField(Class<?> c, String name, boolean forceAccessible, boolean log) {
+    Field f = readField(c, name, log);
+    if (f == null) return null;
+    else if (!forceAccessible) return f;
     else {
       f.setAccessible(true);
       return f;
@@ -25,17 +24,22 @@ public final class FieldHelper {
   }
 
   @Nullable
-  private static Field readField(Class<?> c, String name) {
+  private static Field readField(Class<?> c, String n) {
+    return readField(c, n, false);
+  }
+
+  @Nullable
+  private static Field readField(Class<?> c, String name, boolean log) {
     try {
       if (c == null) {
-        BetterCarpetBots.LOGGER.error("Object cannot be null");
+        CarpetExtraExtrasServer.LOGGER.error("Object cannot be null");
         return null;
       }
 
       return c.getDeclaredField(name);
 
     } catch (NoSuchFieldException e) {
-      BetterCarpetBots.LOGGER.error("Field '{}' does not exist in object: {}", name, c);
+      if (log) CarpetExtraExtrasServer.LOGGER.error("Field '{}' does not exist in object: {}", name, c);
     }
 
     return null;

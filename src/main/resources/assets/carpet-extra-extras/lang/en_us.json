@@ -1,0 +1,5 @@
+{
+  "carpet.rule.carpetBotsSkipNight.desc": "Allows the night to be skipped without carpet bots being asleep",
+  "carpet.rule.carpetBotPrefix.desc": "If carpet bots should get a prefix attached",
+  "carpet.rule.betterEnderPearlChunkLoading.desc": "Chunk"
+}

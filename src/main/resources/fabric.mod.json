@@ -1,30 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "better-carpet-bots",
+  "id": "carpet-extra-extras",
   "version": "${version}",
-  "name": "Better Carpet Bots",
-  "description": "A carpet extension aimed at improving the carpet bots/fake players",
+  "name": "Carpet Extra Extras",
+  "description": "Even more features for the carpet mod",
   "authors": [
     "Thedustbuster"
   ],
   "contact": {
     "homepage": "https://thedustbuster.net/",
-    "sources": "https://github.com/Thedustbustr/Better-Carpet-Bots"
+    "sources": "https://github.com/Thedustbustr/Carpet-Extra-Extras"
   },
   "license": "MIT",
-  "icon": "assets/better-carpet-bots/icon.png",
+  "icon": "assets/carpet-extra-extras/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.thedustbuster.BetterCarpetBots"
+      "net.thedustbuster.CarpetExtraExtrasServer"
     ]
   },
   "mixins": [
-    "better-carpet-bots.mixins.json"
+    "carpet-extra-extras.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.2",
-    "minecraft": "~1.21.1",
+    "minecraft": "~1.21",
     "java": ">=21",
     "carpet": "*"
   }

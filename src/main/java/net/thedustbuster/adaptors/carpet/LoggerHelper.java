@@ -4,13 +4,10 @@ import carpet.logging.HUDLogger;
 import carpet.logging.LoggerRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.thedustbuster.util.TextBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
 
 public final class LoggerHelper {
   @Nullable

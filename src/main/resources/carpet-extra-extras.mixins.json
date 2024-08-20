@@ -5,7 +5,8 @@
   "mixins": [
     "SleepStatusMixin",
     "LoggerRegistryMixin",
-    "HUDControllerMixin"
+    "HUDControllerMixin",
+    "ThrownEnderpearlMixin"
   ],
   "injectors": {
     "defaultRequire": 1
