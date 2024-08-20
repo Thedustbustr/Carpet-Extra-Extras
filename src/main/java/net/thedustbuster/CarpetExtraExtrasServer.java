@@ -30,7 +30,7 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   public static void registerRule(CarpetExtraExtrasRule c) { rules.add(c); }
 
   @Override
-  public String version() { return "carpet-extra-extra"; }
+  public String version() { return "carpet-extra-extras"; }
 
   @Override
   public void onInitialize() {

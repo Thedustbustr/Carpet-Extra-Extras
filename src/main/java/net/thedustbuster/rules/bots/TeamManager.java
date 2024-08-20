@@ -39,7 +39,6 @@ public final class TeamManager {
   }
 
   public static void updateTeam(boolean carpetBotPrefix) {
-    if (!CarpetServer.minecraft_server.isReady()) return;
     findTeam(); updatePlayers();
     if (!carpetBotPrefix && team != null) {
       SCOREBOARD.removePlayerTeam(team);
