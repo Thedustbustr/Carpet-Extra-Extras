@@ -1,5 +1,5 @@
 {
-  "carpet.rule.carpetBotsSkipNight.desc": "Allows the night to be skipped without carpet bots being asleep",
-  "carpet.rule.carpetBotPrefix.desc": "If carpet bots should get a prefix attached",
-  "carpet.rule.betterEnderPearlChunkLoading.desc": "Chunk"
+  "carpet.rule.carpetBotsSkipNight.desc": "Allows the night to be skipped without carpet bots/fake players being asleep.",
+  "carpet.rule.carpetBotPrefix.desc": "If carpet bots/fake players should get a prefix attached. Note: You can edit the prefix appearance by editing the team \"bots\" with the \"/team command\"",
+  "carpet.rule.betterEnderPearlChunkLoading.desc": "Allows ender pearls to pass through unloaded chunks. Note: This is not officially compatible with carpet extra's enderPearlChunkLoading being active."
 }

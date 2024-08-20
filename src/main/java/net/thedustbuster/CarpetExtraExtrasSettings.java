@@ -9,6 +9,7 @@ import net.thedustbuster.rules.bots.TeamManager;
 
 public class CarpetExtraExtrasSettings {
   public static final String MOD = "CarpetExtraExtras";
+  public static final String FEATURE = "Feature";
   public static final String VANILLA = "Vanilla";
 
   public static class carpetBotPrefixValidator extends Validator<Boolean> {
@@ -28,6 +29,6 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = {VANILLA, MOD}, validators = carpetBotPrefixValidator.class)
   public static boolean carpetBotPrefix = false;
 
-  @Rule(categories = {VANILLA, MOD}, validators = carpetBotPrefixValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = carpetBotPrefixValidator.class)
   public static boolean betterEnderPearlChunkLoading = false;
 }
