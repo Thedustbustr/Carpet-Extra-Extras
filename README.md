@@ -1,2 +1,2 @@
-# Better-Carpet-Bots
-A carpet extension aimed at improving the carpet bots/fake players
+# Carpet-Extra-Extras
+Even more features for the carpet mod 
