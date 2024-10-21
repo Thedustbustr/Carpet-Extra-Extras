@@ -5,16 +5,12 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class TextBuilder {
   private final List<FormattedText> formattedTexts = new ArrayList<>();
 
-  public TextBuilder addText(String text, List<ChatFormatting> formatting) {
-    formattedTexts.add(new FormattedText(text, formatting));
-    return this;
-  }
-
-  public Component build() {
+  private Component buildText() {
     Component combinedComponent = Component.literal("");
 
     for (FormattedText formattedText : formattedTexts) {
@@ -28,6 +24,24 @@ public class TextBuilder {
     }
 
     return combinedComponent;
+  }
+
+  public TextBuilder addText(String text, List<ChatFormatting> formatting) {
+    formattedTexts.add(new FormattedText(text, formatting));
+    return this;
+  }
+
+  public TextBuilder addText(String text, ChatFormatting formatting) {
+    formattedTexts.add(new FormattedText(text, List.of(formatting)));
+    return this;
+  }
+
+  public Component build() {
+    return buildText();
+  }
+
+  public Supplier<Component> buildAsSupplier() {
+    return this::buildText;
   }
 
   // Internal class for holding text and formatting

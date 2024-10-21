@@ -7,7 +7,7 @@ import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-import net.thedustbuster.rules.bpcl.PearlManager;
+import net.thedustbuster.rules.PearlTracking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,28 +21,18 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   }
 
   @Inject(method = "tick()V", at = @At(value = "HEAD"), cancellable = true)
-  private void appendPearl(CallbackInfo info) {
+  private void onTick(CallbackInfo info) {
     if (!shouldProcessTick()) return;
 
-    ServerLevel serverLevel = (ServerLevel) this.level();
     Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
     Vec3 velocity = this.getDeltaMovement();
 
-    PearlManager.EnderPearlData pearlData = PearlManager.updatePearl(this, position, velocity);
-
-    if (!PearlManager.isEntityTickingChunk(serverLevel, pearlData.getNextChunkPos())) {
-      info.cancel();
-    }
+    PearlTracking.updatePearl(this, position, velocity);
   }
 
   private boolean shouldProcessTick() {
     Level level = this.level();
-    Vec3 velocity = this.getDeltaMovement();
 
-    return CarpetExtraExtrasSettings.betterEnderPearlChunkLoading && level instanceof ServerLevel && hasHorizontalMotion(velocity);
-  }
-
-  private boolean hasHorizontalMotion(Vec3 velocity) {
-    return Math.abs(velocity.x) > 0.01 || Math.abs(velocity.z) > 0.01;
+    return CarpetExtraExtrasSettings.trackEnderPearls && level instanceof ServerLevel;
   }
 }

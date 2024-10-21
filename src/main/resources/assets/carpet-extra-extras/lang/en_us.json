@@ -1,5 +1,10 @@
 {
+  "carpet.rule.trackEnderPearls.desc": "Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pearls` to work.",
+  "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`.",
   "carpet.rule.carpetBotsSkipNight.desc": "Allows the night to be skipped without carpet bots/fake players being asleep.",
-  "carpet.rule.carpetBotPrefix.desc": "If carpet bots/fake players should get a prefix attached. Note: You can edit the prefix appearance by editing the team \"bots\" with the \"/team command\"",
-  "carpet.rule.betterEnderPearlChunkLoading.desc": "Allows ender pearls to pass through unloaded chunks. Note: This is not officially compatible with carpet extra's enderPearlChunkLoading being active."
+  "carpet.rule.carpetBotPrefix.desc": "If carpet bots/fake players should get a prefix attached.",
+  "carpet.rule.carpetBotTeamName.desc": "The name of the team the bots use under the hood.",
+  "carpet.rule.carpetBotTeamPrefix.desc": "The prefix of the team the bots will use.",
+  "carpet.rule.carpetBotTeamColor.desc": "The color the team for the bots will use.",
+  "carpet.rule.carpetBotTeamPrefixColor.desc": "The color of the prefix of the team the bots will use."
 }

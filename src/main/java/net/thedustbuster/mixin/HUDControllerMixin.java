@@ -3,8 +3,8 @@ package net.thedustbuster.mixin;
 import carpet.logging.HUDController;
 import carpet.logging.LoggerRegistry;
 import net.thedustbuster.adaptors.carpet.FieldHelper;
+import net.thedustbuster.rules.PearlTracking;
 import net.thedustbuster.rules.bots.CarpetBotRules;
-import net.thedustbuster.rules.bpcl.BetterPearlChunkLoading;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,7 +38,7 @@ public abstract class HUDControllerMixin {
   private static void pearl_hud(CallbackInfo ci) throws IllegalAccessException {
     Field field = FieldHelper.getField(LoggerRegistry.class, "__pearls", true, false);
     if (field != null && field.getBoolean(null)) {
-      LoggerRegistry.getLogger("bots").log(BetterPearlChunkLoading.INSTANCE::createHUD);
+      LoggerRegistry.getLogger("bots").log(PearlTracking.INSTANCE::createHUD);
     }
   }
 }

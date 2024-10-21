@@ -2,30 +2,38 @@ package net.thedustbuster.rules.bots;
 
 import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 
+import java.util.Optional;
+
 public final class TeamManager {
-  private static final Scoreboard SCOREBOARD = CarpetServer.minecraft_server.getScoreboard();
+  private static final Scoreboard SCOREBOARD = Optional.ofNullable(CarpetServer.minecraft_server)
+    .map(MinecraftServer::getScoreboard)
+    .orElseThrow(() -> new IllegalStateException("Minecraft server is not ready"));
 
-  private static PlayerTeam team;
-
-  public static PlayerTeam getTeam() { return team; }
+  private static Optional<PlayerTeam> team = Optional.empty();
 
   public static Scoreboard getScoreboard() { return SCOREBOARD; }
 
   private static void createTeam() {
-    team = SCOREBOARD.addPlayerTeam("bots");
-    team.setPlayerPrefix(Component.literal("[Bot] ").withStyle(ChatFormatting.GOLD));
-    team.setColor(ChatFormatting.GRAY);
+    team = Optional.of(SCOREBOARD.addPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    updateTeamProperties(team.get());
   }
 
-  private static void findTeam() {
-    team = SCOREBOARD.getPlayerTeam("bots"); if (team == null) { createTeam(); }
+  private static void findTeamOrCreate() {
+    team = Optional.ofNullable(SCOREBOARD.getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    if (!team.isPresent()) createTeam();
+    else updateTeamProperties(team.get());
+  }
+
+  private static void updateTeamProperties(PlayerTeam team) {
+    team.setPlayerPrefix(Component.literal(CarpetExtraExtrasSettings.carpetBotTeamPrefix + " ").withStyle(CarpetExtraExtrasSettings.carpetBotTeamPrefixColor));
+    team.setColor(CarpetExtraExtrasSettings.carpetBotTeamColor);
   }
 
   private static void updatePlayers() {
@@ -39,15 +47,15 @@ public final class TeamManager {
   }
 
   public static void updateTeam(boolean carpetBotPrefix) {
-    findTeam(); updatePlayers();
-    if (!carpetBotPrefix && team != null) {
-      SCOREBOARD.removePlayerTeam(team);
+    findTeamOrCreate(); updatePlayers();
+    if (!carpetBotPrefix && team.isPresent()) {
+      SCOREBOARD.removePlayerTeam(team.get());
     }
   }
 
   public static void addPlayerToTeam(ServerPlayer player) {
-    if (team == null) { findTeam(); addPlayerToTeam(player); }
+    if (!team.isPresent()) { findTeamOrCreate(); addPlayerToTeam(player); }
 
-    SCOREBOARD.addPlayerToTeam(player.getScoreboardName(), team);
+    SCOREBOARD.addPlayerToTeam(player.getScoreboardName(), team.get());
   }
 }
