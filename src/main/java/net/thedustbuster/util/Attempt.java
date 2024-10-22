@@ -2,13 +2,14 @@ package net.thedustbuster.util;
 
 import net.thedustbuster.util.checked.CheckedFunction;
 import net.thedustbuster.util.checked.CheckedSupplier;
+import net.thedustbuster.util.option.None;
+import net.thedustbuster.util.option.Option;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public class Attempt<T> {
-  private final Optional<T> value;
-  private final Optional<Exception> exception;
+  private final Option<T> value;
+  private final Option<Exception> exception;
 
   public static <R, S> Attempt<S> create(CheckedFunction<R, S> fn, R argument) {
     return create(() -> fn.apply(argument));
@@ -24,13 +25,13 @@ public class Attempt<T> {
 
   // Constructors //
   public Attempt(T value) {
-    this.value = Optional.of(value);
-    this.exception = Optional.empty();
+    this.value = Option.of(value);
+    this.exception = new None<>();
   }
 
   public Attempt(Exception e) {
-    this.value = Optional.empty();
-    this.exception = Optional.of(e);
+    this.value = new None<>();
+    this.exception = Option.of(e);
   }
 
   @SuppressWarnings("unchecked")
@@ -57,14 +58,9 @@ public class Attempt<T> {
   }
 
   public T get() {
-    // Return the value if present, otherwise throw the exception.
-    return value.orElseThrow(() -> {
-      Exception e = exception.orElse(new RuntimeException("Unexpected error: no value and no exception"));
-      if (e instanceof RuntimeException) {
-        return (RuntimeException) e;
-      } else {
-        return new RuntimeException(e);
-      }
-    });
+    return value.orElseThrow(() -> exception
+      // If the exception is a RuntimeException, cast it, otherwise create a new RuntimeException
+      .map(e -> e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e))
+      .orElse(new RuntimeException("Unexpected error: no value and no exception")));
   }
 }

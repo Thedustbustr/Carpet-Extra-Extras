@@ -8,26 +8,25 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-
-import java.util.Optional;
+import net.thedustbuster.util.option.Option;
 
 public final class TeamManager {
-  private static final Scoreboard SCOREBOARD = Optional.ofNullable(CarpetServer.minecraft_server)
+  private static final Scoreboard SCOREBOARD = Option.of(CarpetServer.minecraft_server)
     .map(MinecraftServer::getScoreboard)
     .orElseThrow(() -> new IllegalStateException("Minecraft server is not ready"));
 
-  private static Optional<PlayerTeam> team = Optional.empty();
+  private static Option<PlayerTeam> team = Option.empty();
 
   public static Scoreboard getScoreboard() { return SCOREBOARD; }
 
   private static void createTeam() {
-    team = Optional.of(SCOREBOARD.addPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    team = Option.of(SCOREBOARD.addPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
     updateTeamProperties(team.get());
   }
 
   private static void findTeamOrCreate() {
-    team = Optional.ofNullable(SCOREBOARD.getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
-    if (!team.isPresent()) createTeam();
+    team = Option.of(SCOREBOARD.getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    if (team.isEmpty()) createTeam();
     else updateTeamProperties(team.get());
   }
 
@@ -48,13 +47,13 @@ public final class TeamManager {
 
   public static void updateTeam(boolean carpetBotPrefix) {
     findTeamOrCreate(); updatePlayers();
-    if (!carpetBotPrefix && team.isPresent()) {
+    if (!carpetBotPrefix && team.isDefined()) {
       SCOREBOARD.removePlayerTeam(team.get());
     }
   }
 
   public static void addPlayerToTeam(ServerPlayer player) {
-    if (!team.isPresent()) { findTeamOrCreate(); addPlayerToTeam(player); }
+    if (team.isEmpty()) { findTeamOrCreate(); addPlayerToTeam(player); }
 
     SCOREBOARD.addPlayerToTeam(player.getScoreboardName(), team.get());
   }
