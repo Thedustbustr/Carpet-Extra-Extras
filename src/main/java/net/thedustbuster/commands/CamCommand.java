@@ -14,9 +14,9 @@ import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.util.Attempt;
-import net.thedustbuster.util.Either;
 import net.thedustbuster.util.Tuple;
 import net.thedustbuster.util.Unit;
+import net.thedustbuster.util.option.Option;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static net.minecraft.commands.Commands.literal;
+import static net.thedustbuster.util.Unit.Unit;
 
 public final class CamCommand implements Command {
   public static final CamCommand INSTANCE = new CamCommand();
@@ -48,28 +49,14 @@ public final class CamCommand implements Command {
   private void executeCommand(CommandSourceStack context) {
     Attempt.create(() -> {
       ServerPlayer player = context.getPlayerOrException();
-      return new Tuple<>(player, findPlayerData(player.getUUID()));
-    }).map(tuple -> {
-      ServerPlayer player = tuple._1();
-      Either<String, PreSpectatePlayerData> either = tuple._2();
-
-      return either.fold(
-        l -> {
-          enterSpectatorMode(player);
-          return Unit.INSTANCE;
-        },
-        data -> {
-          restorePlayerState(player, data);
-          return Unit.INSTANCE;
-        }
-      );
-    }).getOrHandle(e -> {
-      handleExecutionError(e);
-      return Unit.INSTANCE;
-    });
+      return new Tuple<>(player, Option.of(playerDataMap.get(player.getUUID())));
+    }).map(tuple -> tuple._2().fold(
+      data -> restorePlayerState(tuple._1(), data),
+      () -> enterSpectatorMode(tuple._1())
+    )).getOrHandle(this::handleExecutionError);
   }
 
-  private void enterSpectatorMode(ServerPlayer player) {
+  private Unit enterSpectatorMode(ServerPlayer player) {
     PreSpectatePlayerData data = new PreSpectatePlayerData(
       player.getUUID(),
       player.gameMode.getGameModeForPlayer(),
@@ -80,9 +67,11 @@ public final class CamCommand implements Command {
 
     playerDataMap.put(player.getUUID(), data);
     player.setGameMode(GameType.SPECTATOR);
+
+    return Unit;
   }
 
-  private void restorePlayerState(ServerPlayer player, PreSpectatePlayerData data) {
+  private Unit restorePlayerState(ServerPlayer player, PreSpectatePlayerData data) {
     player.setGameMode(data.originalGamemode());
     player.teleportTo(
       data.level(),
@@ -95,21 +84,21 @@ public final class CamCommand implements Command {
       true
     );
 
-    playerDataMap.remove(player.getUUID()); // Remove data once restored
+    playerDataMap.remove(player.getUUID());
+
+    return Unit;
   }
 
-  private Either<String, PreSpectatePlayerData> findPlayerData(UUID playerId) {
-    PreSpectatePlayerData data = playerDataMap.get(playerId);
-    return (data != null) ? Either.right(data) : Either.left("Player not found");
-  }
-
-  private void handleExecutionError(Throwable e) {
+  private Unit handleExecutionError(Throwable e) {
     if (e instanceof CommandSyntaxException) {
       CarpetExtraExtrasServer.LOGGER.warn("CommandSyntaxException: {}", e.getMessage());
     } else {
       CarpetExtraExtrasServer.LOGGER.error("Unexpected error during command execution", e);
     }
+
+    return Unit;
   }
 
   private record PreSpectatePlayerData(UUID id, GameType originalGamemode, Vec3 position, Vec2 rotation, ServerLevel level) { }
 }
+

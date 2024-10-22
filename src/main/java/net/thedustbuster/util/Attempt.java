@@ -27,8 +27,6 @@ public class Attempt<T> {
   public Attempt(T value) {
     this.value = Option.of(value);
     this.exception = new None<>();
-
-    System.out.println(Option.of(value));
   }
 
   public Attempt(Exception e) {

@@ -31,6 +31,11 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
+  public <U> U fold(Function<T, U> mapper, Supplier<U> defaultValue) {
+    return defaultValue.get();
+  }
+
+  @Override
   public boolean isDefined() {
     return false;
   }

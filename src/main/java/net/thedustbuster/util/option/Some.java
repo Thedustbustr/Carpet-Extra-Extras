@@ -39,6 +39,11 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
+  public <U> U fold(Function<T, U> mapper, Supplier<U> defaultValue) {
+    return mapper.apply(value);
+  }
+
+  @Override
   public boolean isDefined() {
     return true;
   }

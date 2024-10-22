@@ -22,6 +22,8 @@ public abstract class Option<T> {
 
   public abstract <E extends Throwable> T orElseThrow(Supplier<? extends E> exceptionSupplier) throws E;
 
+  public abstract <U> U fold(Function<T, U> mapper, Supplier<U> defaultValue);
+
   public abstract boolean isDefined();
 
   public abstract boolean isEmpty();
