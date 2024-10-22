@@ -29,7 +29,7 @@ public class CarpetExtraExtrasSettings {
   public static boolean carpetBotsSkipNight = false;
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotPrefixValidator.class)
-  public static boolean carpetBotPrefix = false;
+  public static boolean carpetBotTeam = false;
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamNameValidator.class)
   public static String carpetBotTeamName = "cee_bots";

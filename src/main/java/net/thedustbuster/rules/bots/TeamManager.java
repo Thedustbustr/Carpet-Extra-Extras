@@ -43,7 +43,7 @@ public final class TeamManager {
   }
 
   public static void updateTeam() {
-    updateTeam(CarpetExtraExtrasSettings.carpetBotPrefix);
+    updateTeam(CarpetExtraExtrasSettings.carpetBotTeam);
   }
 
   public static void updateTeam(boolean carpetBotPrefix) {

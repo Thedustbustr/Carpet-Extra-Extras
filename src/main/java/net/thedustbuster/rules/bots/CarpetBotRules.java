@@ -23,7 +23,7 @@ public class CarpetBotRules implements CarpetExtraExtrasRule {
     if (player instanceof EntityPlayerMPFake) {
       bots++;
 
-      if (CarpetExtraExtrasSettings.carpetBotPrefix) {
+      if (CarpetExtraExtrasSettings.carpetBotTeam) {
         TeamManager.addPlayerToTeam(player);
       }
     }
