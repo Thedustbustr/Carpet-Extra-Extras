@@ -5,18 +5,18 @@ import carpet.logging.LoggerRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.thedustbuster.util.TextBuilder;
+import net.thedustbuster.util.option.Option;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
 public final class LoggerHelper {
-  @Nullable
-  public static HUDLogger createHUDLogger(String name) {
-    Field field = FieldHelper.getField(LoggerRegistry.class, "__" + name);
-
-    if (field == null) { return null; }
-
-    return new HUDLogger(field, name, null, null, false);
+  public static Option<HUDLogger> createHUDLogger(String name) {
+    return Option.of(FieldHelper.getField(LoggerRegistry.class, "__" + name))
+            .fold(
+              field -> Option.of(new HUDLogger(field, name, null, null, false)),
+              Option::empty
+            );
   }
 
   public static Component[] createText(TextBuilder tb) {
