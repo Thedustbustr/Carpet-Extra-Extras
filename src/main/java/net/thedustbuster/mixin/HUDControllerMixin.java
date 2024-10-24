@@ -5,6 +5,8 @@ import carpet.logging.LoggerRegistry;
 import net.thedustbuster.adaptors.carpet.FieldHelper;
 import net.thedustbuster.rules.PearlTracking;
 import net.thedustbuster.rules.bots.CarpetBotRules;
+import net.thedustbuster.util.Attempt;
+import net.thedustbuster.util.Unit;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,18 +29,16 @@ public abstract class HUDControllerMixin {
           ),
           remap = false
   )
-  private static void bots_hud(CallbackInfo ci) throws IllegalAccessException {
-    Field field = FieldHelper.getField(LoggerRegistry.class, "__bots", true, false);
-    if (field != null && field.getBoolean(null)) {
-      LoggerRegistry.getLogger("bots").log(CarpetBotRules.INSTANCE::createHUD);
-    }
+  private static void bots_hud(CallbackInfo ci) {
+    FieldHelper.getField(LoggerRegistry.class, "__bots", true, false)
+      .filter(field -> Attempt.create(() -> field.getBoolean(null)).getOrHandle(e -> false))
+      .whenDefined(() -> Unit.cast(() -> LoggerRegistry.getLogger("bots").log(CarpetBotRules.INSTANCE::createHUD)));
   }
 
   @Inject(method = "update_hud", at = @At(value = "INVOKE", target = "Ljava/util/Map;keySet()Ljava/util/Set;"), remap = false)
-  private static void pearl_hud(CallbackInfo ci) throws IllegalAccessException {
-    Field field = FieldHelper.getField(LoggerRegistry.class, "__pearls", true, false);
-    if (field != null && field.getBoolean(null)) {
-      LoggerRegistry.getLogger("bots").log(PearlTracking.INSTANCE::createHUD);
-    }
+  private static void pearl_hud(CallbackInfo ci)  {
+    FieldHelper.getField(LoggerRegistry.class, "__pearls", true, false)
+      .filter(field -> Attempt.create(() -> field.getBoolean(null)).getOrHandle(e -> false))
+      .whenDefined(() -> Unit.cast(() -> LoggerRegistry.getLogger("bots").log(CarpetBotRules.INSTANCE::createHUD)));
   }
 }

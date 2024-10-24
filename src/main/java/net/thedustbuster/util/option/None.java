@@ -2,6 +2,7 @@ package net.thedustbuster.util.option;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class None<T> extends Option<T> {
@@ -36,8 +37,19 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
+  public Option<T> whenDefined(Supplier<?> supplier) {
+    return this;
+  }
+
+  @Override
   public boolean isDefined() {
     return false;
+  }
+
+  @Override
+  public Option<T> whenEmpty(Supplier<?> supplier) {
+    supplier.get();
+    return this;
   }
 
   @Override
@@ -53,6 +65,11 @@ public final class None<T> extends Option<T> {
   @Override
   public <U> Option<U> flatMap(Function<? super T, Option<U>> mapper) {
     return new None<>();
+  }
+
+  @Override
+  public Option<T> filter(Predicate<? super T> predicate) {
+    return this;
   }
 
   @Override

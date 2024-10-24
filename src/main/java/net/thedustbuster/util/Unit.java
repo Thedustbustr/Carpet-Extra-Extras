@@ -1,5 +1,7 @@
 package net.thedustbuster.util;
 
+import java.util.function.Consumer;
+
 public final class Unit {
   private Unit() { }
 
