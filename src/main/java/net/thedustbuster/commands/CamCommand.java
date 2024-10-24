@@ -11,9 +11,9 @@ import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.util.Attempt;
+import net.thedustbuster.util.Logger;
 import net.thedustbuster.util.Tuple;
 import net.thedustbuster.util.Unit;
 import net.thedustbuster.util.option.Option;
@@ -91,9 +91,9 @@ public final class CamCommand implements Command {
 
   private Unit handleExecutionError(Throwable e) {
     if (e instanceof CommandSyntaxException) {
-      CarpetExtraExtrasServer.LOGGER.warn("CommandSyntaxException: {}", e.getMessage());
+      Logger.warn("CommandSyntaxException: " + e.getMessage());
     } else {
-      CarpetExtraExtrasServer.LOGGER.error("Unexpected error during command execution", e);
+      Logger.error("Unexpected error during command execution" + e);
     }
 
     return Unit;

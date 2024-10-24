@@ -3,7 +3,9 @@ package net.thedustbuster.util.option;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class Some<T> extends Option<T> {
@@ -44,8 +46,19 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
+  public Option<T> whenDefined(Consumer<T> consumer) {
+    consumer.accept(value);
+    return this;
+  }
+
+  @Override
   public boolean isDefined() {
     return true;
+  }
+
+  @Override
+  public Option<T> whenEmpty(Runnable runnable) {
+    return this;
   }
 
   @Override
@@ -61,6 +74,11 @@ public final class Some<T> extends Option<T> {
   @Override
   public <U> Option<U> flatMap(Function<? super T, Option<U>> mapper) {
     return mapper.apply(value);
+  }
+
+  @Override
+  public Option<T> filter(Predicate<? super T> predicate) {
+    return predicate.test(value) ? this : Option.empty();
   }
 
   @Override

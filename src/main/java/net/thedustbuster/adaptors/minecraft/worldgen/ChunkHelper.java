@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.thedustbuster.CarpetExtraExtrasServer;
+import net.thedustbuster.util.Logger;
 
 public final class ChunkHelper {
 //  private static final Set<ChunkPos> loadedChunks = new HashSet<>();
@@ -14,7 +14,7 @@ public final class ChunkHelper {
   private static boolean isServerLevel(Level l) {
     if (l instanceof ServerLevel) return true;
 
-    CarpetExtraExtrasServer.LOGGER.warn("Could not load/remove a chunk; the level {} is not a server level! Things may not work properly!", l);
+    Logger.warn("Could not load/remove a chunk; the level " + l + " is not a server level! Things may not work properly!");
     return false;
   }
 

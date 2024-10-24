@@ -12,7 +12,7 @@ import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.commands.Command;
 import net.thedustbuster.rules.CarpetExtraExtrasRule;
 import net.thedustbuster.rules.PearlTracking;
-import net.thedustbuster.rules.bots.CarpetBotRules;
+import net.thedustbuster.rules.CarpetBotTeam;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +34,16 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   public static void registerCommand(Command c) { commands.add(c); }
 
   @Override
-  public String version() { return "carpet-extra-extras"; }
+  public String version() {
+    return "carpet-extra-extras";
+  }
 
   @Override
   public void onInitialize() {
     CarpetServer.manageExtension(this);
 
     /* Register Rules */
-    registerRule(CarpetBotRules.INSTANCE);
+    registerRule(CarpetBotTeam.INSTANCE);
     registerRule(PearlTracking.INSTANCE);
   }
 
@@ -59,10 +61,14 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   }
 
   @Override
-  public void onPlayerLoggedIn(ServerPlayer player) { rules.forEach(rule -> rule.onPlayerLoggedIn(player)); }
+  public void onPlayerLoggedIn(ServerPlayer player) {
+    rules.forEach(rule -> rule.onPlayerLoggedIn(player));
+  }
 
   @Override
-  public void onPlayerLoggedOut(ServerPlayer player) { rules.forEach(rule -> rule.onPlayerLoggedOut(player)); }
+  public void onPlayerLoggedOut(ServerPlayer player) {
+    rules.forEach(rule -> rule.onPlayerLoggedOut(player));
+  }
 
   @Override
   public void onGameStarted() {

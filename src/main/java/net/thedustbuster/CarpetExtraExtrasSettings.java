@@ -6,7 +6,8 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.thedustbuster.rules.bots.TeamManager;
+import net.thedustbuster.rules.CarpetBotTeam;
+import net.thedustbuster.util.option.Option;
 import org.jetbrains.annotations.Nullable;
 
 public class CarpetExtraExtrasSettings {
@@ -17,7 +18,12 @@ public class CarpetExtraExtrasSettings {
   public static final int MAX_TEAM_NAME_LENGTH = 64;
   public static final int MAX_TEAM_PREFIX_LENGTH = 16;
 
-  private static boolean isServerReady() { return CarpetServer.minecraft_server != null && CarpetServer.minecraft_server.isReady(); }
+  private static void updateTeam() {
+    Option.of(CarpetServer.minecraft_server)
+      .whenDefined(server -> {
+        if (server.isReady()) server.execute(CarpetBotTeam::updateTeam);
+      });
+  }
 
   @Rule(categories = {VANILLA, MOD})
   public static boolean trackEnderPearls = false;
@@ -28,7 +34,7 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotPrefixValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamValidator.class)
   public static boolean carpetBotTeam = false;
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamNameValidator.class)
@@ -45,18 +51,17 @@ public class CarpetExtraExtrasSettings {
 
 
   // ###################### [ Validators ] ###################### \\
-  private static class CarpetBotPrefixValidator extends Validator<Boolean> {
+  private static class CarpetBotTeamValidator extends Validator<Boolean> {
     @Override
     public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
-      if (isServerReady()) CarpetServer.minecraft_server.execute(TeamManager::updateTeam);
-      return newValue;
+      updateTeam(); return newValue;
     }
   }
 
   private static class CarpetBotTeamNameValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      if (isServerReady()) CarpetServer.minecraft_server.execute(TeamManager::updateTeam);
+      updateTeam();
       return newValue.length() <= MAX_TEAM_NAME_LENGTH ? newValue : null;
     }
 
@@ -67,8 +72,7 @@ public class CarpetExtraExtrasSettings {
   private static class CarpetBotTeamPrefixValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      if (isServerReady()) CarpetServer.minecraft_server.execute(TeamManager::updateTeam);
-      return newValue.length() <= MAX_TEAM_PREFIX_LENGTH ? newValue : null;
+      updateTeam(); return newValue.length() <= MAX_TEAM_PREFIX_LENGTH ? newValue : null;
     }
 
     @Override
@@ -78,8 +82,7 @@ public class CarpetExtraExtrasSettings {
   private static class CarpetBotTeamColorValidator extends Validator<ChatFormatting> {
     @Override
     public ChatFormatting validate(@Nullable CommandSourceStack source, CarpetRule<ChatFormatting> changingRule, ChatFormatting newValue, String userInput) {
-      if (isServerReady()) CarpetServer.minecraft_server.execute(TeamManager::updateTeam);
-      return newValue;
+      updateTeam(); return newValue;
     }
   }
 }
