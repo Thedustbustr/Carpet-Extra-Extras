@@ -13,14 +13,17 @@ import net.thedustbuster.adaptors.carpet.LoggerHelper;
 import net.thedustbuster.util.TextBuilder;
 import net.thedustbuster.util.option.Option;
 
+import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public final class CarpetBotTeam implements CarpetExtraExtrasRule {
   public static final CarpetBotTeam INSTANCE = new CarpetBotTeam();
-  private static int bots = 0;
 
   public static int getBots() {
-    return bots;
+    return getBotPlayers().size();
   }
 
   private static Scoreboard getScoreboard() {
@@ -61,11 +64,10 @@ public final class CarpetBotTeam implements CarpetExtraExtrasRule {
 
     if (carpetBotTeam) {
       team.whenEmpty(CarpetBotTeam::createTeam);
-    } else if (team.isDefined()) {
-      getScoreboard().removePlayerTeam(team.get());
+      updatePlayers();
+    } else {
+      team.whenDefined(t -> getScoreboard().removePlayerTeam(t));
     }
-
-    updatePlayers();
   }
 
   private static void createTeam() {
@@ -79,19 +81,17 @@ public final class CarpetBotTeam implements CarpetExtraExtrasRule {
   }
 
   private static void updatePlayers() {
-    bots = 0;
-    Option.of(CarpetServer.minecraft_server).whenDefined(server ->
-      server.getAllLevels().forEach(level -> level.players().stream()
-        .filter(player -> player instanceof EntityPlayerMPFake)
-        .forEach(player -> team.whenDefined(t -> {
-          // If bot is already on a team, remove self from team
-          Option.of(getScoreboard().getPlayersTeam(player.getScoreboardName()))
-            .whenDefined(ct -> getScoreboard().removePlayerFromTeam(player.getScoreboardName(), ct));
+    getBotPlayers().forEach(player ->
+      team.whenDefined(t -> getScoreboard().addPlayerToTeam(player.getScoreboardName(), t)));
+  }
 
-          getScoreboard().addPlayerToTeam(player.getScoreboardName(), t);
-          bots++;
-        }))
+  private static Set<ServerPlayer> getBotPlayers() {
+    return Option.of(CarpetServer.minecraft_server)
+      .map(server -> StreamSupport.stream(server.getAllLevels().spliterator(), false)  // Convert Iterable to Stream
+        .flatMap(level -> level.players().stream())
+        .filter(player -> player instanceof EntityPlayerMPFake)
+        .collect(Collectors.toSet())
       )
-    );
+      .orElse(Set.of());
   }
 }
