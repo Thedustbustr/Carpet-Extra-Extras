@@ -1,6 +1,7 @@
 package net.thedustbuster.util.option;
 
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -37,7 +38,7 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
-  public Option<T> whenDefined(Supplier<?> supplier) {
+  public Option<T> whenDefined(Consumer<T> consumer) {
     return this;
   }
 
@@ -47,8 +48,8 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
-  public Option<T> whenEmpty(Supplier<?> supplier) {
-    supplier.get();
+  public Option<T> whenEmpty(Runnable runnable) {
+    runnable.run();
     return this;
   }
 

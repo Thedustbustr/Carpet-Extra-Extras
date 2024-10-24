@@ -6,9 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.thedustbuster.util.TextBuilder;
 import net.thedustbuster.util.option.Option;
-import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.Field;
 
 public final class LoggerHelper {
   public static Option<HUDLogger> createHUDLogger(String name) {

@@ -3,6 +3,7 @@ package net.thedustbuster.util.option;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -45,8 +46,8 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
-  public Option<T> whenDefined(Supplier<?> supplier) {
-    supplier.get();
+  public Option<T> whenDefined(Consumer<T> consumer) {
+    consumer.accept(value);
     return this;
   }
 
@@ -56,7 +57,7 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
-  public Option<T> whenEmpty(Supplier<?> supplier) {
+  public Option<T> whenEmpty(Runnable runnable) {
     return this;
   }
 

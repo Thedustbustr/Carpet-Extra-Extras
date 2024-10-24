@@ -2,7 +2,7 @@ package net.thedustbuster.mixin;
 
 import net.minecraft.server.players.SleepStatus;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-import net.thedustbuster.rules.bots.CarpetBotRules;
+import net.thedustbuster.rules.CarpetBotTeam;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public abstract class SleepStatusMixin {
   @Inject(method = "update", at = @At("TAIL"))
   private void update(CallbackInfoReturnable cb) {
     if (CarpetExtraExtrasSettings.carpetBotsSkipNight) {
-      this.activePlayers = this.activePlayers - CarpetBotRules.getBots();
+      this.activePlayers = this.activePlayers - CarpetBotTeam.getBots();
     }
   }
 }

@@ -1,5 +1,6 @@
 package net.thedustbuster.util.option;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -25,11 +26,11 @@ public abstract class Option<T> {
 
   public abstract <U> U fold(Function<T, U> mapper, Supplier<U> defaultValue);
 
-  public abstract Option<T> whenDefined(Supplier<?> supplier);
+  public abstract Option<T> whenDefined(Consumer<T> consumer);
 
   public abstract boolean isDefined();
 
-  public abstract Option<T> whenEmpty(Supplier<?> supplier);
+  public abstract Option<T> whenEmpty(Runnable runnable);
 
   public abstract boolean isEmpty();
 
