@@ -1,8 +1,8 @@
 package net.thedustbuster.mixin;
 
 import carpet.logging.LoggerRegistry;
-import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.adaptors.carpet.LoggerHelper;
+import net.thedustbuster.util.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,27 +18,18 @@ public abstract class LoggerRegistryMixin {
   @Inject(method = "registerLoggers", at = @At("TAIL"), remap = false)
   private static void registerLoggers(CallbackInfo cb) {
     LoggerHelper.createHUDLogger("bots")
-            .fold(
-              logger -> {
-                LoggerRegistry.registerLogger("bots", logger);
-                return Unit;
-              },
-              () -> {
-                CarpetExtraExtrasServer.LOGGER.warn("Could not create HUDLogger for bots! This feature will not be present!");
-                return Unit;
-              }
-            );
+      .fold(
+        logger -> {
+          LoggerRegistry.registerLogger("bots", logger);
+          return Unit;
+        },
+        () -> Logger.warn("Could not create HUDLogger for bots! This feature will not be present!")
+      );
 
     LoggerHelper.createHUDLogger("pearls")
-            .fold(
-              logger -> {
-                LoggerRegistry.registerLogger("pearls", logger);
-                return Unit;
-              },
-              () -> {
-                CarpetExtraExtrasServer.LOGGER.warn("Could not create HUDLogger for pearls! This feature will not be present!");
-                return Unit;
-              }
-            );
+      .fold(
+        logger -> Unit(() -> LoggerRegistry.registerLogger("pearls", logger)),
+        () -> Logger.warn("Could not create HUDLogger for pearls! This feature will not be present!")
+      );
   }
 }

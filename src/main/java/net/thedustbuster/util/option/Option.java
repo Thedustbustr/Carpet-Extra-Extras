@@ -10,7 +10,7 @@ public abstract class Option<T> {
   }
 
   public static <T> Option<T> empty() {
-    return new None();
+    return new None<>();
   }
 
   public abstract T get();

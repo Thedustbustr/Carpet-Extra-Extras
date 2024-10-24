@@ -14,7 +14,7 @@ public final class LoggerHelper {
   public static Option<HUDLogger> createHUDLogger(String name) {
     return Option.of(FieldHelper.getField(LoggerRegistry.class, "__" + name))
             .fold(
-              field -> Option.of(new HUDLogger(field, name, null, null, false)),
+              field -> Option.of(new HUDLogger(field.get(), name, null, null, false)),
               Option::empty
             );
   }

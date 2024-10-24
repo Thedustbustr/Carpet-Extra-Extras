@@ -1,7 +1,7 @@
 package net.thedustbuster.adaptors.carpet;
 
-import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.util.Attempt;
+import net.thedustbuster.util.Logger;
 import net.thedustbuster.util.option.Option;
 
 import java.lang.reflect.Field;
@@ -31,7 +31,7 @@ public final class FieldHelper {
   private static Option<Field> readField(Class<?> c, String name, boolean log) {
     return Attempt.create(() -> Option.of(c.getDeclaredField(name)))
       .getOrHandle(e -> {
-        if (log) CarpetExtraExtrasServer.LOGGER.error("Field '{}' does not exist in class: {}", name, c.getName());
+        if (log) Logger.error("Field " + name + " does not exist in class: " + c.getName());
         return Option.empty();
       });
   }
