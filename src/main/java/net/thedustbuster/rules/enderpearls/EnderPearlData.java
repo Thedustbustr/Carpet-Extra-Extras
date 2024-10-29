@@ -86,7 +86,7 @@ public class EnderPearlData {
     toRemove.forEach(this::removeLoadedTravelChunk);
   }
 
-  protected void dropAllChunks() {
+  public void dropAllChunks() {
     new HashSet<>(loadedChunks).forEach(this::removeLoadedTravelChunk);
   }
 
