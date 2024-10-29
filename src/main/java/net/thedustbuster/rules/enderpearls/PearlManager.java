@@ -8,7 +8,10 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class PearlManager {
   private static final Map<UUID, EnderPearlData> enderPearlCache = new HashMap<>();

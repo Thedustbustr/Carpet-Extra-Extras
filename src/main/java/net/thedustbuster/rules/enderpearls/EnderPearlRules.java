@@ -4,13 +4,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-import net.thedustbuster.rules.CarpetExtraExtrasRule;
+import net.thedustbuster.rules.CEE_Rule;
 import net.thedustbuster.util.TextBuilder;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class EnderPearlRules implements CarpetExtraExtrasRule {
+public class EnderPearlRules implements CEE_Rule {
   public static final EnderPearlRules INSTANCE = new EnderPearlRules();
 
   @Override

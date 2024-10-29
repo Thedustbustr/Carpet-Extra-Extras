@@ -43,7 +43,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
       updatePearlManager(info, serverLevel);
     }
 
-    if (CarpetExtraExtrasSettings.pre21ThrowableEntityBehaviorReintroduced) {
+    if (CarpetExtraExtrasSettings.pre21ThrowableEntityBehavior) {
       applyPre21Behavior(info);
     }
   }

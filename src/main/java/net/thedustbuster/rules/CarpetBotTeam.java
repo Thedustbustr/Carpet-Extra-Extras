@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public final class CarpetBotTeam implements CarpetExtraExtrasRule {
+public final class CarpetBotTeam implements CEE_Rule {
   public static final CarpetBotTeam INSTANCE = new CarpetBotTeam();
 
   public static int getBots() {

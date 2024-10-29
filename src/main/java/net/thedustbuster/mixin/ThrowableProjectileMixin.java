@@ -1,6 +1,5 @@
 package net.thedustbuster.mixin;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
@@ -16,7 +15,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ThrowableProjectile.class)
-public abstract class ThrowableProjectileMixin extends Entity implements ProjectileAccessor {
+/* Projectile cannot be extended because its constructor is package-private. So instead we extend the ProjectileMixin that exposes the instance's tick() method
+   and the ProjectileAccessor interface that exposes any other required protected methods */
+public abstract class ThrowableProjectileMixin extends ProjectileMixin implements ProjectileAccessor {
   public ThrowableProjectileMixin(EntityType<?> entityType, Level level) {
     super(entityType, level);
   }
@@ -25,8 +26,8 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
   protected abstract void applyInertia();
 
   @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-  private void tick(CallbackInfo info) {
-    if (!CarpetExtraExtrasSettings.pre21ThrowableEntityBehaviorReintroduced) return;
+  public void tick(CallbackInfo info) {
+    if (!CarpetExtraExtrasSettings.pre21ThrowableEntityBehavior) return;
 
     HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::invokeCanHitEntity);
     Vec3 newPosition = calculateNewPosition(hitResult);
@@ -35,7 +36,7 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
     this.invokeUpdateRotation();
     this.applyEffectsFromBlocks();
 
-    this.invokeSuperTick();
+    super.tick();
 
     if (shouldHandleHitResult(hitResult)) {
       this.invokeHitTargetOrDeflectSelf(hitResult);

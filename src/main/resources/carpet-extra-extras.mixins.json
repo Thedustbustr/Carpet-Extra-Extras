@@ -3,12 +3,13 @@
   "package": "net.thedustbuster.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "SleepStatusMixin",
-    "LoggerRegistryMixin",
     "HUDControllerMixin",
-    "ThrownEnderpearlMixin",
+    "LoggerRegistryMixin",
+    "ProjectileAccessor",
+    "ProjectileMixin",
+    "SleepStatusMixin",
     "ThrowableProjectileMixin",
-    "ProjectileAccessor"
+    "ThrownEnderpearlMixin"
   ],
   "injectors": {
     "defaultRequire": 1

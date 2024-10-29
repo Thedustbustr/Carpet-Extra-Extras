@@ -7,12 +7,9 @@ import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
+// Used to access required protected methods in Projectile
 @Mixin(Projectile.class)
 public interface ProjectileAccessor {
-
-  @Invoker("tick")
-  void invokeSuperTick();
-
   @Invoker("canHitEntity")
   boolean invokeCanHitEntity(Entity entity);
 

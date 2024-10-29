@@ -8,11 +8,12 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
-import net.thedustbuster.commands.Command;
+import net.thedustbuster.rules.CEE_Rule;
 import net.thedustbuster.rules.CarpetBotTeam;
-import net.thedustbuster.rules.CarpetExtraExtrasRule;
 import net.thedustbuster.rules.enderpearls.EnderPearlRules;
+import net.thedustbuster.util.option.Option;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,16 @@ import java.util.Map;
 
 public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitializer {
   public static final Logger LOGGER = LoggerFactory.getLogger("carpet-extra-extras");
-  private static final List<CarpetExtraExtrasRule> rules = new ArrayList<>();
-  private static final List<Command> commands = new ArrayList<>();
+  private static final List<CEE_Rule> rules = new ArrayList<>();
+  private static final List<CEE_Command> commands = new ArrayList<>();
 
-  public static void registerRule(CarpetExtraExtrasRule c) { rules.add(c); }
-  public static void registerCommand(Command c) { commands.add(c); }
+  private static void registerRule(CEE_Rule c) { rules.add(c); }
+  private static void registerCommand(CEE_Command c) { commands.add(c); }
+
+  public static Option<MinecraftServer> getMinecraftServer() {
+    return Option.of(CarpetServer.minecraft_server)
+      .filter(MinecraftServer::isReady);
+  }
 
   @Override
   public String version() {
@@ -57,7 +63,7 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
 
   @Override
   public void onTick(MinecraftServer server) {
-    rules.forEach(CarpetExtraExtrasRule::onTick);
+    rules.forEach(CEE_Rule::onTick);
   }
 
   @Override
@@ -73,7 +79,7 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   @Override
   public void onGameStarted() {
     CarpetServer.settingsManager.parseSettingsClass(CarpetExtraExtrasSettings.class);
-    rules.forEach(CarpetExtraExtrasRule::onGameStarted);
+    rules.forEach(CEE_Rule::onGameStarted);
   }
 
   /* Taken from https://github.com/gnembon/carpet-extra/blob/master/src/main/java/carpetextra/utils/CarpetExtraTranslations.java# */
