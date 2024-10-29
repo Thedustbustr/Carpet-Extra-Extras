@@ -16,6 +16,7 @@ import net.thedustbuster.rules.enderpearls.EnderPearlData;
 import net.thedustbuster.rules.enderpearls.PearlManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -24,6 +25,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   @Shadow
   private long ticketTimer = 0L;
+
+  @Unique
+  private ThrownEnderpearl getSelf() {
+    return (ThrownEnderpearl) (Object) this;
+  }
 
   protected ThrownEnderpearlMixin(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
     super(entityType, level);
@@ -34,26 +40,28 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     if (!(this.level() instanceof ServerLevel serverLevel)) return;
 
     if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix || CarpetExtraExtrasSettings.trackEnderPearls) {
-      trackPearl(info, serverLevel);
+      updatePearlManager(info, serverLevel);
     }
 
     if (CarpetExtraExtrasSettings.pre21ThrowableEntityBehaviorReintroduced) {
-      applyPre21ThrowableEntityBehaviorReintroduced(info);
+      applyPre21Behavior(info);
     }
   }
 
-  private void trackPearl(CallbackInfo info, ServerLevel serverLevel) {
+  @Unique
+  private void updatePearlManager(CallbackInfo info, ServerLevel serverLevel) {
     Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
     Vec3 velocity = this.getDeltaMovement();
 
-    EnderPearlData pearlData = PearlManager.updatePearl((ThrownEnderpearl) (Object) this, position, velocity);
+    EnderPearlData pearlData = PearlManager.updatePearl(this.getSelf(), position, velocity);
 
     if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix && !PearlManager.isEntityTickingChunk(serverLevel, pearlData.getNextChunkPos())) {
       info.cancel(); // Cancel the rest of the original tick method
     }
   }
 
-  private void applyPre21ThrowableEntityBehaviorReintroduced(CallbackInfo info) {
+  @Unique
+  private void applyPre21Behavior(CallbackInfo info) {
     Entity entity = this.getOwner();
     if (entity instanceof ServerPlayer && !entity.isAlive() && ((ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_ENDER_PEARLS_VANISH_ON_DEATH)) {
       this.discard();
@@ -66,23 +74,23 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 
     super.tick();
 
-    if (this.isAlive() && shouldRenewTicket(this.position(), previousX, previousZ, this.getDeltaMovement()) && entity instanceof ServerPlayer serverPlayer) {
-      this.ticketTimer = serverPlayer.registerAndUpdateEnderPearlTicket((ThrownEnderpearl) (Object) this);
+    if (this.isAlive() && shouldRenewTicket(this.position(), previousX, previousZ) && entity instanceof ServerPlayer serverPlayer) {
+      this.ticketTimer = serverPlayer.registerAndUpdateEnderPearlTicket(this.getSelf());
     }
 
     info.cancel(); // Cancel the rest of the original tick method
   }
 
-  private boolean shouldRenewTicket(Vec3 position, int previousX, int previousZ, Vec3 velocity) {
+  @Unique
+  private boolean shouldRenewTicket(Vec3 position, int previousX, int previousZ) {
     BlockPos blockPos = BlockPos.containing(position);
+    int currentX = SectionPos.blockToSectionCoord(blockPos.getX());
+    int currentZ = SectionPos.blockToSectionCoord(blockPos.getZ());
 
     boolean timer = --this.ticketTimer <= 0L;
-    boolean newChunk = previousX != SectionPos.blockToSectionCoord(blockPos.getX()) || previousZ != SectionPos.blockToSectionCoord(blockPos.getZ());
-    boolean highSpeed = false;
-
-    if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix) {
-      highSpeed = PearlManager.getEnderPearl(this.getUUID()).isHighSpeed();
-    }
+    boolean newChunk = previousX != currentX || previousZ != currentZ;
+    boolean highSpeed = CarpetExtraExtrasSettings.enderPearlChunkLoadingFix
+            && PearlManager.getEnderPearl(this.getUUID()).isHighSpeed();
 
     return !highSpeed && (timer || newChunk);
   }
