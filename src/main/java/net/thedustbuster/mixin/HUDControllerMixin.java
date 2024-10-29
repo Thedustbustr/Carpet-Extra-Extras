@@ -4,6 +4,7 @@ import carpet.logging.HUDController;
 import carpet.logging.LoggerRegistry;
 import net.thedustbuster.adaptors.carpet.FieldHelper;
 import net.thedustbuster.rules.CarpetBotTeam;
+import net.thedustbuster.rules.betterpearls.BetterPearlChunkLoading;
 import net.thedustbuster.util.Attempt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,6 +38,6 @@ public abstract class HUDControllerMixin {
   private static void pearl_hud(CallbackInfo ci) {
     FieldHelper.getField(LoggerRegistry.class, "__pearls", true, false)
       .filter(field -> Attempt.create(() -> field.getBoolean(null)).getOrHandle(e -> false))
-      .whenDefined(field -> Unit(() -> LoggerRegistry.getLogger("bots").log(CarpetBotTeam.INSTANCE::createHUD)));
+      .whenDefined(field -> Unit(() -> LoggerRegistry.getLogger("pearls").log(BetterPearlChunkLoading.INSTANCE::createHUD)));
   }
 }

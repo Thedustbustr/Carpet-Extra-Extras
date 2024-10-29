@@ -13,7 +13,6 @@ import net.thedustbuster.adaptors.carpet.LoggerHelper;
 import net.thedustbuster.util.TextBuilder;
 import net.thedustbuster.util.option.Option;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

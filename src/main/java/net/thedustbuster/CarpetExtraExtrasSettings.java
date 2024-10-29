@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class CarpetExtraExtrasSettings {
   public static final String MOD = "CarpetExtraExtras";
   public static final String FEATURE = "Feature";
+  public static final String LTS = "LTS";
   public static final String COMMAND = "Command";
   public static final String VANILLA = "Vanilla";
   public static final int MAX_TEAM_NAME_LENGTH = 64;
@@ -25,11 +26,15 @@ public class CarpetExtraExtrasSettings {
       });
   }
 
+  // ###################### [ Rules ] ###################### \\
   @Rule(categories = {VANILLA, MOD})
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"})
-  public static String commandCam = "false";
+  @Rule(categories = {VANILLA, MOD})
+  public static boolean enderPearlChunkLoadingFix = false;
+
+  @Rule(categories = {FEATURE, LTS, MOD})
+  public static boolean Pre21ThrowableEntityBehaviorReintroduced = false;
 
   @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
@@ -49,6 +54,9 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
+  // ###################### [ Commands ] ###################### \\
+  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"})
+  public static String commandCam = "false";
 
   // ###################### [ Validators ] ###################### \\
   private static class CarpetBotTeamValidator extends Validator<Boolean> {

@@ -10,9 +10,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.commands.Command;
-import net.thedustbuster.rules.CarpetExtraExtrasRule;
-import net.thedustbuster.rules.PearlTracking;
 import net.thedustbuster.rules.CarpetBotTeam;
+import net.thedustbuster.rules.CarpetExtraExtrasRule;
+import net.thedustbuster.rules.betterpearls.BetterPearlChunkLoading;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
 
     /* Register Rules */
     registerRule(CarpetBotTeam.INSTANCE);
-    registerRule(PearlTracking.INSTANCE);
+    registerRule(BetterPearlChunkLoading.INSTANCE);
   }
 
   @Override

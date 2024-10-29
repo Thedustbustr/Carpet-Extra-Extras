@@ -6,7 +6,9 @@
     "SleepStatusMixin",
     "LoggerRegistryMixin",
     "HUDControllerMixin",
-    "ThrownEnderpearlMixin"
+    "ThrownEnderpearlMixin",
+    "ThrowableProjectileMixin",
+    "ProjectileAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
