@@ -10,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,7 +22,7 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
   }
 
   @Shadow
-  public abstract void applyInertia();
+  protected abstract void applyInertia();
 
   @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
   private void tick(CallbackInfo info) {
@@ -46,12 +47,14 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
     info.cancel(); // Cancel the rest of the original tick method
   }
 
+  @Unique
   private Vec3 calculateNewPosition(HitResult hitResult) {
     return (hitResult.getType() != HitResult.Type.MISS)
       ? hitResult.getLocation()
       : this.position().add(this.getDeltaMovement());
   }
 
+  @Unique
   private boolean shouldHandleHitResult(HitResult hitResult) {
     return hitResult.getType() != HitResult.Type.MISS && this.isAlive();
   }
