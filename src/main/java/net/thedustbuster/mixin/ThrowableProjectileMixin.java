@@ -25,7 +25,7 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
 
   @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
   private void tick(CallbackInfo info) {
-    if (!CarpetExtraExtrasSettings.Pre21ThrowableEntityBehaviorReintroduced) return;
+    if (!CarpetExtraExtrasSettings.pre21ThrowableEntityBehaviorReintroduced) return;
 
     HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::invokeCanHitEntity);
     Vec3 newPosition = calculateNewPosition(hitResult);

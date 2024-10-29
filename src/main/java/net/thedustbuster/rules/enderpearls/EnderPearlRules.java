@@ -1,20 +1,21 @@
-package net.thedustbuster.rules.betterpearls;
+package net.thedustbuster.rules.enderpearls;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.rules.CarpetExtraExtrasRule;
 import net.thedustbuster.util.TextBuilder;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class BetterPearlChunkLoading implements CarpetExtraExtrasRule {
-  public static final BetterPearlChunkLoading INSTANCE = new BetterPearlChunkLoading();
+public class EnderPearlRules implements CarpetExtraExtrasRule {
+  public static final EnderPearlRules INSTANCE = new EnderPearlRules();
 
   @Override
   public void onTick() {
-    if (true) {
+    if (CarpetExtraExtrasSettings.trackEnderPearls || CarpetExtraExtrasSettings.enderPearlChunkLoadingFix) {
       PearlManager.tick();
     }
   }

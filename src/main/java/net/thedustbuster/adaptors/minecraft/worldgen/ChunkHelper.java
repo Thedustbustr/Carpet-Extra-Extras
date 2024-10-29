@@ -9,8 +9,6 @@ import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.util.Logger;
 
 public final class ChunkHelper {
-//  private static final Set<ChunkPos> loadedChunks = new HashSet<>();
-
   private static boolean isServerLevel(Level l) {
     if (l instanceof ServerLevel) return true;
 
@@ -22,14 +20,12 @@ public final class ChunkHelper {
     if (!isServerLevel(level)) return;
 
     ((ServerLevel) level).getChunkSource().addRegionTicket(ticket, c, radius, c);
-//    loadedChunks.add(c);
   }
 
   public static void unloadChunk(TicketType<ChunkPos> ticket, ChunkPos c, int radius, Level level) {
     if (!isServerLevel(level)) return;
 
     ((ServerLevel) level).getChunkSource().removeRegionTicket(ticket, c, radius, c);
-//    loadedChunks.remove(c);
   }
 
   public static ChunkPos calculateChunkPos(Vec3 pos) {

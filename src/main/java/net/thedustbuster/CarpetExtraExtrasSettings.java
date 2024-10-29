@@ -34,7 +34,7 @@ public class CarpetExtraExtrasSettings {
   public static boolean enderPearlChunkLoadingFix = false;
 
   @Rule(categories = {FEATURE, LTS, MOD})
-  public static boolean Pre21ThrowableEntityBehaviorReintroduced = false;
+  public static boolean pre21ThrowableEntityBehaviorReintroduced = false;
 
   @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
