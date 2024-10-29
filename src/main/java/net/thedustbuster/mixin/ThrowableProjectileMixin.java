@@ -34,7 +34,7 @@ public abstract class ThrowableProjectileMixin extends Entity implements Project
     this.invokeUpdateRotation();
     this.applyEffectsFromBlocks();
 
-    super.tick();
+    this.invokeSuperTick();
 
     if (shouldHandleHitResult(hitResult)) {
       this.invokeHitTargetOrDeflectSelf(hitResult);
