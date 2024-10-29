@@ -14,14 +14,14 @@ At high speeds, Mojang's implementation of ender pearl chunk loading can fail. T
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `VANILLA`
+* Categories: `VANILLA`, `BUGFIX`
 
 ### pre21ThrowableEntityBehaviorReintroduced
 Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a. This also fixes a bug introduced where at high speeds an Ender Pearl would land in the wrong position.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `LTS`
+* Categories: `FEATURE`, `BUGFIX`, `LTS`
 
 ### carpetBotsSkipNight
 Allows the night to be skipped without carpet bots/fake players being asleep.
