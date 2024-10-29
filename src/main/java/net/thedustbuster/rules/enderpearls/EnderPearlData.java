@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class EnderPearlData {
   private static final TicketType<ChunkPos> ENDER_PEARL_TRAVEL_TICKET = TicketType.create("ender_pearl_travel", Comparator.comparingLong(ChunkPos::toLong));
+  private static final double HIGHSPEED_THRESHOLD = 100d; // blocks per tick
 
   private final ThrownEnderpearl entity;
   private Vec3 position;
@@ -24,7 +25,7 @@ public class EnderPearlData {
   private boolean highSpeed = false;
   private final Set<ChunkPos> loadedChunks = new HashSet<>();
 
-  protected EnderPearlData(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
+  public EnderPearlData(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
     this.entity = entity;
     this.position = position;
     this.velocity = velocity;
@@ -44,22 +45,26 @@ public class EnderPearlData {
     return (ServerLevel) entity.level();
   }
 
-  protected void updatePositionAndVelocity(Vec3 position, Vec3 velocity) {
+  public void updatePositionAndVelocity(Vec3 position, Vec3 velocity) {
     this.position = position;
     this.velocity = velocity;
 
-    this.highSpeed = highSpeed || PearlManager.isHighSpeed(velocity);
+    this.highSpeed = highSpeed || isHighSpeed(velocity);
   }
 
   public boolean isHighSpeed() {
     return this.highSpeed;
   }
 
-  protected void loadNextTravelChunk() {
+  private static boolean isHighSpeed(Vec3 velocity) {
+    return Math.abs(velocity.x()) > HIGHSPEED_THRESHOLD || Math.abs(velocity.z()) > HIGHSPEED_THRESHOLD;
+  }
+
+  public void loadNextTravelChunk() {
     addLoadedTravelChunk(getNextChunkPos());
   }
 
-  protected void addLoadedTravelChunk(ChunkPos chunkPos) {
+  public void addLoadedTravelChunk(ChunkPos chunkPos) {
     if (loadedChunks.add(getNextChunkPos())) {
       ChunkHelper.loadChunk(ENDER_PEARL_TRAVEL_TICKET, chunkPos, 2, entity.level());
     }
@@ -73,7 +78,7 @@ public class EnderPearlData {
     return ChunkHelper.calculateChunkPos(position.add(velocity));
   }
 
-  protected void dropUnusedChunks() {
+  public void dropUnusedChunks() {
     Set<ChunkPos> toRemove = this.loadedChunks.stream()
       .filter(c -> c != null && !c.equals(this.getChunkPos()) && !c.equals(this.getNextChunkPos()))
       .collect(Collectors.toSet());

@@ -81,7 +81,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     boolean highSpeed = false;
 
     if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix) {
-      highSpeed = PearlManager.isHighSpeed(velocity);
+      highSpeed = PearlManager.getEnderPearl(this.getUUID()).isHighSpeed();
     }
 
     return !highSpeed && (timer || newChunk);
