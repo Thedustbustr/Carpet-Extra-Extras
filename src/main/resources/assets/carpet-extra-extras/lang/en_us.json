@@ -1,10 +1,12 @@
 {
   "carpet.rule.trackEnderPearls.desc": "Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pearls` to work.",
-  "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`.",
+  "carpet.rule.enderPearlChunkLoadingFix.desc": "At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this.\n*May not be required if using `pre21ThrowableEntityBehavior`\n*May improve performance.",
+  "carpet.rule.pre21ThrowableEntityBehavior.desc": "Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a. This fixes a bug introduced where at high speeds an Ender Pearl would land in the wrong position.",
   "carpet.rule.carpetBotsSkipNight.desc": "Allows the night to be skipped without carpet bots/fake players being asleep.",
   "carpet.rule.carpetBotTeam.desc": "If carpet bots/fake players should be added to a special team.",
   "carpet.rule.carpetBotTeamName.desc": "The name of the team the carpet bots/fake use.",
   "carpet.rule.carpetBotTeamPrefix.desc": "The prefix of the team the carpet bots/fake will use.",
   "carpet.rule.carpetBotTeamColor.desc": "The color the team for the carpet bots/fake will use.",
-  "carpet.rule.carpetBotTeamPrefixColor.desc": "The color of the prefix of the team the carpet bots/fake will use."
+  "carpet.rule.carpetBotTeamPrefixColor.desc": "The color of the prefix of the team the carpet bots/fake will use.",
+  "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`."
 }

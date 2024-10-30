@@ -3,9 +3,12 @@
   "package": "net.thedustbuster.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "SleepStatusMixin",
-    "LoggerRegistryMixin",
     "HUDControllerMixin",
+    "LoggerRegistryMixin",
+    "ProjectileAccessor",
+    "ProjectileMixin",
+    "SleepStatusMixin",
+    "ThrowableProjectileMixin",
     "ThrownEnderpearlMixin"
   ],
   "injectors": {

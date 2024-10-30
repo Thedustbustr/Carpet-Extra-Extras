@@ -2,7 +2,7 @@ package net.thedustbuster.rules;
 
 import net.minecraft.server.level.ServerPlayer;
 
-public interface CarpetExtraExtrasRule {
+public interface CEE_Rule {
   default void onTick() { }
 
   default void onGameStarted() { }

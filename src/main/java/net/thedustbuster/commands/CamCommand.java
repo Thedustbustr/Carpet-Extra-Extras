@@ -4,6 +4,7 @@ import carpet.utils.CommandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,10 +13,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-import net.thedustbuster.util.Attempt;
-import net.thedustbuster.util.Logger;
-import net.thedustbuster.util.Tuple;
-import net.thedustbuster.util.Unit;
+import net.thedustbuster.adaptors.minecraft.MessagingHelper;
+import net.thedustbuster.util.*;
 import net.thedustbuster.util.option.Option;
 
 import java.util.EnumSet;
@@ -26,7 +25,7 @@ import java.util.UUID;
 import static net.minecraft.commands.Commands.literal;
 import static net.thedustbuster.util.Unit.Unit;
 
-public final class CamCommand implements Command {
+public final class CamCommand implements CEE_Command {
   public static final CamCommand INSTANCE = new CamCommand();
   private final Map<UUID, PreSpectatePlayerData> playerDataMap = new HashMap<>();
 
@@ -44,6 +43,8 @@ public final class CamCommand implements Command {
     dispatcher.register(literal("c")
       .requires(player -> CommandHelper.canUseCommand(player, CarpetExtraExtrasSettings.commandCam))
       .executes(c -> dispatcher.execute(camCommand.getLiteral(), c.getSource()))); // Manual call because .redirect() will not work
+
+    CEE_Command.updatePlayers();
   }
 
   private void executeCommand(CommandSourceStack context) {
@@ -51,12 +52,12 @@ public final class CamCommand implements Command {
       ServerPlayer player = context.getPlayerOrException();
       return new Tuple<>(player, Option.of(playerDataMap.get(player.getUUID())));
     }).map(tuple -> tuple._2().fold(
-      data -> restorePlayerState(tuple._1(), data),
-      () -> enterSpectatorMode(tuple._1())
+      data -> exitFreecam(tuple._1(), data),
+      () -> enterFreecam(tuple._1())
     )).getOrHandle(this::handleExecutionError);
   }
 
-  private Unit enterSpectatorMode(ServerPlayer player) {
+  private Unit enterFreecam(ServerPlayer player) {
     PreSpectatePlayerData data = new PreSpectatePlayerData(
       player.getUUID(),
       player.gameMode.getGameModeForPlayer(),
@@ -67,11 +68,17 @@ public final class CamCommand implements Command {
 
     playerDataMap.put(player.getUUID(), data);
     player.setGameMode(GameType.SPECTATOR);
+    MessagingHelper.sendActionBarMessage(player,
+      new TextBuilder()
+        .addText("Gamemode: ", ChatFormatting.GOLD)
+        .addText("SPECTATOR", ChatFormatting.WHITE)
+        .build()
+    );
 
     return Unit;
   }
 
-  private Unit restorePlayerState(ServerPlayer player, PreSpectatePlayerData data) {
+  private Unit exitFreecam(ServerPlayer player, PreSpectatePlayerData data) {
     player.setGameMode(data.originalGamemode());
     player.teleportTo(
       data.level(),
@@ -85,7 +92,12 @@ public final class CamCommand implements Command {
     );
 
     playerDataMap.remove(player.getUUID());
-
+    MessagingHelper.sendActionBarMessage(player,
+      new TextBuilder()
+        .addText("Gamemode: ", ChatFormatting.GOLD)
+        .addText(data.originalGamemode.getName().toUpperCase(), ChatFormatting.WHITE)
+        .build()
+    );
     return Unit;
   }
 
@@ -101,4 +113,3 @@ public final class CamCommand implements Command {
 
   private record PreSpectatePlayerData(UUID id, GameType originalGamemode, Vec3 position, Vec2 rotation, ServerLevel level) { }
 }
-

@@ -13,13 +13,12 @@ import net.thedustbuster.adaptors.carpet.LoggerHelper;
 import net.thedustbuster.util.TextBuilder;
 import net.thedustbuster.util.option.Option;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public final class CarpetBotTeam implements CarpetExtraExtrasRule {
+public final class CarpetBotTeam implements CEE_Rule {
   public static final CarpetBotTeam INSTANCE = new CarpetBotTeam();
 
   public static int getBots() {

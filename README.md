@@ -3,11 +3,25 @@ Even more features for the carpet mod.
 
 ## Carpet Extra Extras Rules:
 ### trackEnderPearls
-Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pearls` to work.
+Tracks all thrown Ender Pearls on the server; this or `enderPearlChunkLoadingFix` must be enabled for `/log pearls` to work.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `VANILLA`
+
+### enderPearlChunkLoadingFix
+At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this. This may not be required if using `pre21ThrowableEntityBehavior`. This also may improve performance.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `VANILLA`, `BUGFIX`
+
+### pre21ThrowableEntityBehavior
+Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes a bug introduced where at high speeds an Ender Pearl would land in the wrong position.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `BUGFIX`, `LTS`
 
 ### carpetBotsSkipNight
 Allows the night to be skipped without carpet bots/fake players being asleep.
