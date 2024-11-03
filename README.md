@@ -25,7 +25,7 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 
 ### emptyShulkerStackLimitAllContainers
 > [!NOTE]
-This overrides any other `emptyShulkerStack` rule.
+This overrides any other `emptyShulkerStackLimit` rule.
 
 Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
 * Type: `String`
@@ -34,14 +34,14 @@ Allows empty shulker boxes to stack to the set amount when being transferred by 
 * Categories: `FEATURE`, `LTS`
 
 ### emptyShulkerStackLimitHoppers
-Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes
+Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
 ### emptyShulkerStackLimitDroppers
-Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes
+Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
