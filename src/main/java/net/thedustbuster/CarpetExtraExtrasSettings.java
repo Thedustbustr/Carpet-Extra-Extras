@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CarpetBotTeam;
+import net.thedustbuster.util.Attempt;
 import org.jetbrains.annotations.Nullable;
 
 import static net.thedustbuster.CarpetExtraExtrasServer.getMinecraftServer;
@@ -30,6 +31,23 @@ public class CarpetExtraExtrasSettings {
     getMinecraftServer().whenDefined(server -> server.execute(() -> instance.register(server.getCommands().getDispatcher())));
   }
 
+  // ###################### [ Type Conversion ] ###################### \\
+  public static int getEmptyShulkerStackLimitAllContainers() {
+    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitAllContainers)).getOrHandle((Exception e) -> -1);
+  }
+
+  public static int getEmptyShulkerStackLimitHoppers() {
+    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitHoppers)).getOrHandle((Exception e) -> -1);
+  }
+
+  public static int getEmptyShulkerStackLimitDroppers() {
+    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitDroppers)).getOrHandle((Exception e) -> -1);
+  }
+
+  public static int getEmptyShulkerStackLimitDispensers() {
+    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitDispensers)).getOrHandle((Exception e) -> -1);
+  }
+
   // ###################### [ Rules ] ###################### \\
   @Rule(categories = {VANILLA, MOD})
   public static boolean trackEnderPearls = false;
@@ -39,6 +57,18 @@ public class CarpetExtraExtrasSettings {
 
   @Rule(categories = {FEATURE, BUGFIX, LTS, MOD})
   public static boolean pre21ThrowableEntityBehavior = false;
+
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  public static String emptyShulkerStackLimitAllContainers = "false";
+
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  public static String emptyShulkerStackLimitHoppers = "false";
+
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  public static String emptyShulkerStackLimitDroppers = "false";
+
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  public static String emptyShulkerStackLimitDispensers = "false";
 
   @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
@@ -63,6 +93,23 @@ public class CarpetExtraExtrasSettings {
   public static String commandCam = "false";
 
   // ###################### [ Validators ] ###################### \\
+  private static class stackableShulkerValidator extends Validator<String> {
+    @Override
+    public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      if (newValue.equals("false")) return newValue;
+
+      boolean validInt = Attempt.create(() -> {
+        int i = Integer.parseInt(newValue);
+        return i > 0 && i <= 64;
+      }).getOrHandle((Exception e) -> false);
+
+      return validInt ? newValue : null;
+    }
+
+    @Override
+    public String description() { return "Valid options include: false, 1-64"; }
+  }
+
   private static class CarpetBotTeamValidator extends Validator<Boolean> {
     @Override
     public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {

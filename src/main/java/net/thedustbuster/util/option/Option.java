@@ -10,9 +10,7 @@ public abstract class Option<T> {
     return value != null && !(value instanceof None) ? new Some<>(value) : new None<>();
   }
 
-  public static <T> Option<T> empty() {
-    return new None<>();
-  }
+  public static <T> Option<T> empty() { return new None<>(); }
 
   public abstract T get();
 

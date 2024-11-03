@@ -23,6 +23,36 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `BUGFIX`, `LTS`
 
+> [!NOTE]
+This overrides any other `emptyShulkerStack` rule.
+### emptyShulkerStackLimitAllContainers
+Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### emptyShulkerStackLimitHoppers
+Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### emptyShulkerStackLimitDroppers
+Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### emptyShulkerStackLimitDispensers
+Allows empty shulker boxes to stack to the set amount inside dispensers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
 ### carpetBotsSkipNight
 Allows the night to be skipped without carpet bots/fake players being asleep.
 * Type: `Boolean`
