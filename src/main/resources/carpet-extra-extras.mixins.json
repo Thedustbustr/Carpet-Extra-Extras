@@ -9,7 +9,8 @@
     "ProjectileMixin",
     "SleepStatusMixin",
     "ThrowableProjectileMixin",
-    "ThrownEnderpearlMixin"
+    "ThrownEnderpearlMixin",
+    "HopperBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
