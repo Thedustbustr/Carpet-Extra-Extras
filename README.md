@@ -23,9 +23,10 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `BUGFIX`, `LTS`
 
+### emptyShulkerStackLimitAllContainers
 > [!NOTE]
 This overrides any other `emptyShulkerStack` rule.
-### emptyShulkerStackLimitAllContainers
+
 Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
 * Type: `String`
 * Default value: `false`
