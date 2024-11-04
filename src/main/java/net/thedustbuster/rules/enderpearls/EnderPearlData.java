@@ -4,7 +4,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
@@ -17,12 +16,11 @@ import java.util.stream.Collectors;
 
 public class EnderPearlData {
   private static final TicketType<ChunkPos> ENDER_PEARL_TRAVEL_TICKET = TicketType.create("ender_pearl_travel", Comparator.comparingLong(ChunkPos::toLong));
-  private static final double HIGHSPEED_THRESHOLD = 100d; // blocks per tick
+  private static final int TICKS_TO_CHUNK_UNLOAD = 6;
 
   private final ThrownEnderpearl entity;
   private Vec3 position;
   private Vec3 velocity;
-  private boolean highSpeed = false;
   private final Set<ChunkPos> loadedChunks = new HashSet<>();
 
   public EnderPearlData(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
@@ -30,8 +28,6 @@ public class EnderPearlData {
     this.position = position;
     this.velocity = velocity;
   }
-
-  public Entity getEntity() { return this.entity; }
 
   public Vec3 getPosition() { return position; }
 
@@ -45,28 +41,27 @@ public class EnderPearlData {
     return (ServerLevel) entity.level();
   }
 
-  public void updatePositionAndVelocity(Vec3 position, Vec3 velocity) {
+  public EnderPearlData updatePositionAndVelocity(Vec3 position, Vec3 velocity) {
     this.position = position;
     this.velocity = velocity;
 
-    this.highSpeed = highSpeed || isHighSpeed(velocity);
-  }
-
-  public boolean isHighSpeed() {
-    return this.highSpeed;
-  }
-
-  private static boolean isHighSpeed(Vec3 velocity) {
-    return Math.abs(velocity.x()) > HIGHSPEED_THRESHOLD || Math.abs(velocity.z()) > HIGHSPEED_THRESHOLD;
+    return this;
   }
 
   public void loadNextTravelChunk() {
     addLoadedTravelChunk(getNextChunkPos());
   }
 
+  public void loadCurrentTravelChunk() {
+    addLoadedTravelChunk(getChunkPos());
+  }
+
   public void addLoadedTravelChunk(ChunkPos chunkPos) {
-    if (loadedChunks.add(getNextChunkPos())) {
-      ChunkHelper.loadChunk(ENDER_PEARL_TRAVEL_TICKET, chunkPos, 2, entity.level());
+    if (loadedChunks.contains(chunkPos)) {
+      ChunkHelper.refreshChunkUnloadTimer(TICKS_TO_CHUNK_UNLOAD, chunkPos);
+    } else {
+      ChunkHelper.loadChunk(ENDER_PEARL_TRAVEL_TICKET, TICKS_TO_CHUNK_UNLOAD, chunkPos, 2, entity.level());
+      loadedChunks.add(getNextChunkPos());
     }
   }
 

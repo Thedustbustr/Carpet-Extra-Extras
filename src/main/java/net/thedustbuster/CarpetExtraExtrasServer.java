@@ -13,6 +13,7 @@ import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CEE_Rule;
 import net.thedustbuster.rules.CarpetBotTeam;
 import net.thedustbuster.rules.enderpearls.EnderPearlRules;
+import net.thedustbuster.util.TickDelayManager;
 import net.thedustbuster.util.option.Option;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -64,6 +65,8 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   @Override
   public void onTick(MinecraftServer server) {
     rules.forEach(CEE_Rule::onTick);
+
+    TickDelayManager.tick();
   }
 
   @Override

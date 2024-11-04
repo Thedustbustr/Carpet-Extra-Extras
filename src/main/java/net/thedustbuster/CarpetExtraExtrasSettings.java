@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CarpetBotTeam;
+import net.thedustbuster.rules.enderpearls.PearlManager;
 import net.thedustbuster.util.Attempt;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,10 +50,10 @@ public class CarpetExtraExtrasSettings {
   }
 
   // ###################### [ Rules ] ###################### \\
-  @Rule(categories = {VANILLA, MOD})
+  @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {VANILLA, BUGFIX, MOD})
+  @Rule(categories = {VANILLA, BUGFIX, MOD}, validators = enderPearlChunkLoadingFixValidator.class)
   public static boolean enderPearlChunkLoadingFix = false;
 
   @Rule(categories = {FEATURE, BUGFIX, LTS, MOD})
@@ -93,6 +94,24 @@ public class CarpetExtraExtrasSettings {
   public static String commandCam = "false";
 
   // ###################### [ Validators ] ###################### \\
+  private static class trackEnderPearlsValidator extends Validator<Boolean> {
+    @Override
+    public Boolean validate(@Nullable CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
+      if (!newValue) getMinecraftServer().whenDefined(server -> server.execute(PearlManager::removedAllTrackedPearls));
+
+      return newValue;
+    }
+  }
+
+  private static class enderPearlChunkLoadingFixValidator extends Validator<Boolean> {
+    @Override
+    public Boolean validate(@Nullable CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
+      if (!newValue) getMinecraftServer().whenDefined(server -> server.execute(PearlManager::removedAllHighSpeedPearls));
+
+      return newValue;
+    }
+  }
+
   private static class stackableShulkerValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
@@ -152,5 +171,3 @@ public class CarpetExtraExtrasSettings {
     }
   }
 }
-
-

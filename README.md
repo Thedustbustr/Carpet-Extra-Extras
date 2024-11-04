@@ -3,7 +3,7 @@ Even more features for the carpet mod.
 
 ## Carpet Extra Extras Rules:
 ### trackEnderPearls
-Tracks all thrown Ender Pearls on the server; this or `enderPearlChunkLoadingFix` must be enabled for `/log pearls` to work.
+Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pearls` to work.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -27,28 +27,28 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 > [!NOTE]
 This overrides any other `emptyShulkerStackLimit` rule.
 
-Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
 ### emptyShulkerStackLimitHoppers
-Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
 ### emptyShulkerStackLimitDroppers
-Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
 ### emptyShulkerStackLimitDispensers
-Allows empty shulker boxes to stack to the set amount inside dispensers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`
+Allows empty shulker boxes to stack to the set amount inside dispensers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`

@@ -7,25 +7,38 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.util.Logger;
+import net.thedustbuster.util.TickDelayManager;
+import net.thedustbuster.util.option.Option;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ChunkHelper {
-  private static boolean isServerLevel(Level l) {
-    if (l instanceof ServerLevel) return true;
+  private static final Map<ChunkPos, TickDelayManager.TickDelayTask> loadedChunks = new HashMap<>();
+
+  private static Option<ServerLevel> isServerLevel(Level l) {
+    if (l instanceof ServerLevel) return Option.of((ServerLevel) l);
 
     Logger.warn("Could not load/remove a chunk; the level " + l + " is not a server level! Things may not work properly!");
-    return false;
+    return Option.empty();
   }
 
-  public static void loadChunk(TicketType<ChunkPos> ticket, ChunkPos c, int radius, Level level) {
-    if (!isServerLevel(level)) return;
-
-    ((ServerLevel) level).getChunkSource().addRegionTicket(ticket, c, radius, c);
+  public static void loadChunk(TicketType<ChunkPos> ticket, int ticks, ChunkPos chunkPos, int radius, Level level) {
+    isServerLevel(level).whenDefined(serverLevel -> {
+      serverLevel.getChunkSource().addRegionTicket(ticket, chunkPos, radius, chunkPos);
+      loadedChunks.put(chunkPos, TickDelayManager.executeIn(ticks, () -> unloadChunk(ticket, chunkPos, radius, serverLevel)));
+    });
   }
 
-  public static void unloadChunk(TicketType<ChunkPos> ticket, ChunkPos c, int radius, Level level) {
-    if (!isServerLevel(level)) return;
+  public static void refreshChunkUnloadTimer(int ticks, ChunkPos chunkPos) {
+    Option.of(loadedChunks.get(chunkPos)).whenDefined(task -> task.refresh(ticks));
+  }
 
-    ((ServerLevel) level).getChunkSource().removeRegionTicket(ticket, c, radius, c);
+  public static void unloadChunk(TicketType<ChunkPos> ticket, ChunkPos chunkPos, int radius, Level level) {
+    isServerLevel(level).whenDefined(serverLevel -> {
+      serverLevel.getChunkSource().removeRegionTicket(ticket, chunkPos, radius, chunkPos);
+      loadedChunks.remove(chunkPos);
+    });
   }
 
   public static ChunkPos calculateChunkPos(Vec3 pos) {
