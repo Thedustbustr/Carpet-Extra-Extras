@@ -61,7 +61,7 @@ public class EnderPearlData {
       ChunkHelper.refreshChunkUnloadTimer(TICKS_TO_CHUNK_UNLOAD, chunkPos);
     } else {
       ChunkHelper.loadChunk(ENDER_PEARL_TRAVEL_TICKET, TICKS_TO_CHUNK_UNLOAD, chunkPos, 2, entity.level());
-      loadedChunks.add(getNextChunkPos());
+      loadedChunks.add(chunkPos);
     }
   }
 
