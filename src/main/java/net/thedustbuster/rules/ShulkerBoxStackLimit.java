@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.thedustbuster.util.option.Option;
 
 import static net.thedustbuster.CarpetExtraExtrasSettings.*;
-import static net.thedustbuster.CarpetExtraExtrasSettings.getEmptyShulkerStackLimitHoppers;
 
 public final class ShulkerBoxStackLimit {
   private static boolean isShulkerBoxAndRule(ItemStack stack) {
@@ -26,19 +25,19 @@ public final class ShulkerBoxStackLimit {
   }
 
   private static boolean ruleEnabled() {
-    return getEmptyShulkerStackLimitAllContainers() != -1
-            || getEmptyShulkerStackLimitHoppers() != -1
-            || getEmptyShulkerStackLimitDroppers() != -1
-            || getEmptyShulkerStackLimitDispensers() != -1;
+    return getStackableShulkerLimitAllContainers() != -1
+            || getStackableShulkerLimitHoppers() != -1
+            || getStackableShulkerLimitDroppers() != -1
+            || getStackableShulkerLimitDispensers() != -1;
   }
 
   public static Option<Boolean> canMergeItems(ItemStack stack1, ItemStack stack2, Container destinationContainer) {
     if (isShulkerBoxAndRule(stack1) || isShulkerBox(stack2)) {
       return switch (destinationContainer) {
-        case Container c when ruleEnabled(getEmptyShulkerStackLimitAllContainers()) -> Option.of(stack1.getCount() < getEmptyShulkerStackLimitAllContainers());
-        case HopperBlockEntity c when ruleEnabled(getEmptyShulkerStackLimitHoppers()) -> Option.of(stack1.getCount() < getEmptyShulkerStackLimitHoppers());
-        case DropperBlockEntity c when ruleEnabled(getEmptyShulkerStackLimitDroppers()) -> Option.of(stack1.getCount() < getEmptyShulkerStackLimitDroppers());
-        case DispenserBlockEntity c when ruleEnabled(getEmptyShulkerStackLimitDispensers()) -> Option.of(stack1.getCount() < getEmptyShulkerStackLimitDispensers());
+        case Container c when ruleEnabled(getStackableShulkerLimitAllContainers()) -> Option.of(stack1.getCount() < getStackableShulkerLimitAllContainers());
+        case HopperBlockEntity c when ruleEnabled(getStackableShulkerLimitHoppers()) -> Option.of(stack1.getCount() < getStackableShulkerLimitHoppers());
+        case DropperBlockEntity c when ruleEnabled(getStackableShulkerLimitDroppers()) -> Option.of(stack1.getCount() < getStackableShulkerLimitDroppers());
+        case DispenserBlockEntity c when ruleEnabled(getStackableShulkerLimitDispensers()) -> Option.of(stack1.getCount() < getStackableShulkerLimitDispensers());
         default -> Option.empty();
       };
     }

@@ -23,9 +23,9 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `BUGFIX`, `LTS`
 
-### emptyShulkerStackLimitAllContainers
+### stackableShulkerLimitAllContainers
 > [!NOTE]
-This overrides any other `emptyShulkerStackLimit` rule.
+This overrides any other `stackableShulkerLimit` rule.
 
 Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
@@ -33,21 +33,21 @@ Allows empty shulker boxes to stack to the set amount when being transferred by 
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
-### emptyShulkerStackLimitHoppers
+### stackableShulkerLimitHoppers
 Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
-### emptyShulkerStackLimitDroppers
+### stackableShulkerLimitDroppers
 Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`
 * Allowed options: `false`, `1-64`
 * Categories: `FEATURE`, `LTS`
 
-### emptyShulkerStackLimitDispensers
+### stackableShulkerLimitDispensers
 Allows empty shulker boxes to stack to the set amount inside dispensers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
 * Type: `String`
 * Default value: `false`

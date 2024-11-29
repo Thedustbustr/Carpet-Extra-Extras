@@ -11,7 +11,7 @@
     "SleepStatusMixin",
     "ThrowableProjectileMixin",
     "ThrownEnderpearlMixin",
-    "compat.LithiumHopperHelperMixin"
+    "compatibility.LithiumHopperHelperMixin"
   ],
   "injectors": {
     "defaultRequire": 1

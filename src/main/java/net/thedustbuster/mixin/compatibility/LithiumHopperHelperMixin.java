@@ -1,4 +1,4 @@
-package net.thedustbuster.mixin.compat;
+package net.thedustbuster.mixin.compatibility;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;

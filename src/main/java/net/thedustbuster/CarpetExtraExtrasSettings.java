@@ -33,20 +33,18 @@ public class CarpetExtraExtrasSettings {
   }
 
   // ###################### [ Type Conversion ] ###################### \\
-  public static int getEmptyShulkerStackLimitAllContainers() {
-    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitAllContainers)).getOrHandle((Exception e) -> -1);
+  public static int getStackableShulkerLimitAllContainers() { return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitAllContainers)).getOrHandle((Exception e) -> -1); }
+
+  public static int getStackableShulkerLimitHoppers() {
+    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitHoppers)).getOrHandle((Exception e) -> -1);
   }
 
-  public static int getEmptyShulkerStackLimitHoppers() {
-    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitHoppers)).getOrHandle((Exception e) -> -1);
+  public static int getStackableShulkerLimitDroppers() {
+    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitDroppers)).getOrHandle((Exception e) -> -1);
   }
 
-  public static int getEmptyShulkerStackLimitDroppers() {
-    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitDroppers)).getOrHandle((Exception e) -> -1);
-  }
-
-  public static int getEmptyShulkerStackLimitDispensers() {
-    return Attempt.create(() -> Integer.parseInt(emptyShulkerStackLimitDispensers)).getOrHandle((Exception e) -> -1);
+  public static int getStackableShulkerLimitDispensers() {
+    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitDispensers)).getOrHandle((Exception e) -> -1);
   }
 
   // ###################### [ Rules ] ###################### \\
@@ -60,16 +58,16 @@ public class CarpetExtraExtrasSettings {
   public static boolean pre21ThrowableEntityBehavior = false;
 
   @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
-  public static String emptyShulkerStackLimitAllContainers = "false";
+  public static String stackableShulkerLimitAllContainers = "false";
 
   @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
-  public static String emptyShulkerStackLimitHoppers = "false";
+  public static String stackableShulkerLimitHoppers = "false";
 
   @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
-  public static String emptyShulkerStackLimitDroppers = "false";
+  public static String stackableShulkerLimitDroppers = "false";
 
   @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
-  public static String emptyShulkerStackLimitDispensers = "false";
+  public static String stackableShulkerLimitDispensers = "false";
 
   @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
@@ -126,13 +124,16 @@ public class CarpetExtraExtrasSettings {
     }
 
     @Override
-    public String description() { return "Valid options include: false, 1-64"; }
+    public String description() {
+      return "Valid options include: false, 1-64";
+    }
   }
 
   private static class CarpetBotTeamValidator extends Validator<Boolean> {
     @Override
     public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
-      updateTeam(); return newValue;
+      updateTeam();
+      return newValue;
     }
   }
 
@@ -144,30 +145,37 @@ public class CarpetExtraExtrasSettings {
     }
 
     @Override
-    public String description() { return "You must choose a value from 0 to 64"; }
+    public String description() {
+      return "You must choose a value from 0 to 64";
+    }
   }
 
   private static class CarpetBotTeamPrefixValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      updateTeam(); return newValue.length() <= MAX_TEAM_PREFIX_LENGTH ? newValue : null;
+      updateTeam();
+      return newValue.length() <= MAX_TEAM_PREFIX_LENGTH ? newValue : null;
     }
 
     @Override
-    public String description() { return "You must choose a value from 0 to 16"; }
+    public String description() {
+      return "You must choose a value from 0 to 16";
+    }
   }
 
   private static class CarpetBotTeamColorValidator extends Validator<ChatFormatting> {
     @Override
     public ChatFormatting validate(@Nullable CommandSourceStack source, CarpetRule<ChatFormatting> changingRule, ChatFormatting newValue, String userInput) {
-      updateTeam(); return newValue;
+      updateTeam();
+      return newValue;
     }
   }
 
   private static class CamCommandValidator extends Validator<String> {
     @Override
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      updateCommand(CamCommand.INSTANCE); return newValue;
+      updateCommand(CamCommand.INSTANCE);
+      return newValue;
     }
   }
 }
