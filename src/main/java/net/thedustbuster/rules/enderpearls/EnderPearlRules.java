@@ -26,7 +26,7 @@ public class EnderPearlRules implements CEE_Rule {
     PearlManager.getTrackedEnderPearls().forEach((k, v) -> {
       int i = index.getAndIncrement();
 
-      String travel = PearlManager.getHighSpeedPearls().containsKey(k) ? "[High Speed] " : "";
+      String travel = PearlManager.getHighSpeedPearls().containsKey(k) ? "[HS] " : "";
       String uuid = String.valueOf(k).substring(0, 4) + "...";
       String velocity = Mth.floor(v.getVelocity().length() * 20) + "m/s";
       String position = "(" + v.getIPosition().getX() + ", " + v.getIPosition().getY() + ", " + v.getIPosition().getZ() + ")";

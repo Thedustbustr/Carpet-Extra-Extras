@@ -18,7 +18,7 @@ public final class PearlManager {
   private static final Map<UUID, EnderPearlData> trackedEnderPearls = new HashMap<>();
   private static final Map<UUID, EnderPearlData> highSpeedPearls = new HashMap<>();
 
-  private static final double HIGHSPEED_THRESHOLD = 100d; // blocks per tick
+  private static final double HIGHSPEED_THRESHOLD = 20d; // blocks per tick
 
   public static Map<UUID, EnderPearlData> getTrackedEnderPearls() {
     return Collections.unmodifiableMap(trackedEnderPearls);
@@ -34,7 +34,6 @@ public final class PearlManager {
 
   public static void removedAllHighSpeedPearls() {
     highSpeedPearls.values().forEach(EnderPearlData::dropAllChunks);
-    trackedEnderPearls.clear();
     highSpeedPearls.clear();
   }
 
@@ -48,14 +47,7 @@ public final class PearlManager {
   }
 
   private static EnderPearlData flagAsHighSpeed(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
-    return highSpeedPearls.computeIfAbsent(entity.getUUID(), id -> new EnderPearlData(entity, position, velocity))
-      .updatePositionAndVelocity(position, velocity);
-  }
-
-  public static void tick() {
-    if (!highSpeedPearls.isEmpty()) {
-      highSpeedPearls.forEach((k, v) -> checkPearl(v));
-    }
+    return highSpeedPearls.computeIfAbsent(entity.getUUID(), id -> new EnderPearlData(entity, position, velocity)).updatePositionAndVelocity(position, velocity);
   }
 
   public static void updatePearl(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
@@ -66,24 +58,23 @@ public final class PearlManager {
       );
   }
 
+  public static void tick() {
+    if (!highSpeedPearls.isEmpty()) {
+      highSpeedPearls.forEach((k, v) -> loadChunks(v));
+    }
+  }
+
   public static void tryLoadChunks(ThrownEnderpearl entity, Vec3 position, Vec3 velocity) {
     if (isHighSpeed(velocity)) {
-      checkPearl(flagAsHighSpeed(entity, position, velocity));
+      loadChunks(flagAsHighSpeed(entity, position, velocity));
     } else {
       removePearl(entity.getUUID(), !CarpetExtraExtrasSettings.trackEnderPearls);
     }
   }
 
-  private static void checkPearl(EnderPearlData pearl) {
-    pearl.dropUnusedChunks();
-
-    if (!isEntityTickingChunk(pearl.getServerLevel(), pearl.getChunkPos())) {
-      pearl.loadCurrentTravelChunk();
-    }
-
-    if (!isEntityTickingChunk(pearl.getServerLevel(), pearl.getNextChunkPos())) {
-      pearl.loadNextTravelChunk();
-    }
+  private static void loadChunks(EnderPearlData pearl) {
+    pearl.loadCurrentChunk();
+    pearl.loadNextChunk();
   }
 
   public static boolean isHighSpeed(Vec3 velocity) {

@@ -14,6 +14,8 @@ import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.adaptors.minecraft.worldgen.ChunkHelper;
 import net.thedustbuster.rules.enderpearls.PearlManager;
+import net.thedustbuster.util.Logger;
+import org.apache.commons.logging.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

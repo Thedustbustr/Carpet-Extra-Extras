@@ -10,14 +10,14 @@ Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pea
 * Categories: `VANILLA`
 
 ### enderPearlChunkLoadingFix
-At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this. This may not be required if using `pre21ThrowableEntityBehavior`. This also may improve performance.
+At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this. This is not required if using `pre21ThrowableEntityBehavior`.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `VANILLA`, `BUGFIX`
 
 ### pre21ThrowableEntityBehavior
-Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes a bug introduced where at high speeds an Ender Pearl would land in the wrong position.
+Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes 2 bugs that were introduced with 1.21.2: At high speeds an Ender Pearl would land in the wrong position and chunk loading could fail.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`

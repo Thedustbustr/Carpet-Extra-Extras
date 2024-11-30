@@ -36,6 +36,10 @@ public final class ChunkHelper {
 
   public static void unloadChunk(TicketType<ChunkPos> ticket, ChunkPos chunkPos, int radius, Level level) {
     isServerLevel(level).whenDefined(serverLevel -> {
+      Option.of(loadedChunks.get(chunkPos)).whenDefined(task -> {
+        if (!task.isComplete()) task.cancel();
+      });
+
       serverLevel.getChunkSource().removeRegionTicket(ticket, chunkPos, radius, chunkPos);
       loadedChunks.remove(chunkPos);
     });
