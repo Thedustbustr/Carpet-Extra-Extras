@@ -12,8 +12,10 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
-import net.thedustbuster.rules.enderpearls.EnderPearlData;
+import net.thedustbuster.adaptors.minecraft.worldgen.ChunkHelper;
 import net.thedustbuster.rules.enderpearls.PearlManager;
+import net.thedustbuster.util.Logger;
+import org.apache.commons.logging.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,7 +37,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     super(entityType, level);
   }
 
-  @Inject(method = "tick()V", at = @At(value = "HEAD"), cancellable = true)
+  @Inject(method = "tick", at = @At(value = "HEAD"), cancellable = true)
   private void tick(CallbackInfo info) {
     if (!(this.level() instanceof ServerLevel serverLevel)) return;
 
@@ -48,15 +50,26 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     }
   }
 
+  @Inject(method = "onRemoval", at = @At(value = "HEAD"))
+  private void onRemoval(RemovalReason removalReason, CallbackInfo ci) {
+    PearlManager.removePearl(this.getUUID());
+  }
+
   @Unique
   private void updatePearlManager(CallbackInfo info, ServerLevel serverLevel) {
     Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
     Vec3 velocity = this.getDeltaMovement();
 
-    EnderPearlData pearlData = PearlManager.updatePearl(this.getSelf(), position, velocity);
+    if (CarpetExtraExtrasSettings.trackEnderPearls) {
+      PearlManager.updatePearl(this.getSelf(), position, velocity);
+    }
 
-    if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix && !PearlManager.isEntityTickingChunk(serverLevel, pearlData.getNextChunkPos())) {
-      info.cancel(); // Cancel the rest of the original tick method
+    if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix) {
+      PearlManager.tryLoadChunks(this.getSelf(), position, velocity);
+
+      if (!PearlManager.isEntityTickingChunk(serverLevel, ChunkHelper.calculateChunkPos(position.add(velocity)))) {
+        info.cancel(); // Cancel the rest of the original tick method
+      }
     }
   }
 
@@ -74,7 +87,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 
     super.tick();
 
-    if (this.isAlive() && shouldRenewTicket(this.position(), previousX, previousZ) && entity instanceof ServerPlayer serverPlayer) {
+    if (this.isAlive() && shouldRenewTicket(this.position(), this.getDeltaMovement(), previousX, previousZ) && entity instanceof ServerPlayer serverPlayer) {
       this.ticketTimer = serverPlayer.registerAndUpdateEnderPearlTicket(this.getSelf());
     }
 
@@ -82,7 +95,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   }
 
   @Unique
-  private boolean shouldRenewTicket(Vec3 position, int previousX, int previousZ) {
+  private boolean shouldRenewTicket(Vec3 position, Vec3 velocity, int previousX, int previousZ) {
     BlockPos blockPos = BlockPos.containing(position);
     int currentX = SectionPos.blockToSectionCoord(blockPos.getX());
     int currentZ = SectionPos.blockToSectionCoord(blockPos.getZ());
@@ -90,7 +103,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     boolean timer = --this.ticketTimer <= 0L;
     boolean newChunk = previousX != currentX || previousZ != currentZ;
     boolean highSpeed = CarpetExtraExtrasSettings.enderPearlChunkLoadingFix
-            && PearlManager.getEnderPearl(this.getUUID()).isHighSpeed();
+      && PearlManager.isHighSpeed(velocity);
 
     return !highSpeed && (timer || newChunk);
   }

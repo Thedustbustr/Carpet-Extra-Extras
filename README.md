@@ -3,25 +3,56 @@ Even more features for the carpet mod.
 
 ## Carpet Extra Extras Rules:
 ### trackEnderPearls
-Tracks all thrown Ender Pearls on the server; this or `enderPearlChunkLoadingFix` must be enabled for `/log pearls` to work.
+Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pearls` to work.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `VANILLA`
 
 ### enderPearlChunkLoadingFix
-At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this. This may not be required if using `pre21ThrowableEntityBehavior`. This also may improve performance.
+At high speeds, Mojang's implementation of ender pearl chunk loading can fail. This implementation attempts to fix this. This is not required if using `pre21ThrowableEntityBehavior`.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `VANILLA`, `BUGFIX`
 
 ### pre21ThrowableEntityBehavior
-Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes a bug introduced where at high speeds an Ender Pearl would land in the wrong position.
+Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes 2 bugs that were introduced with 1.21.2: At high speeds an Ender Pearl would land in the wrong position and chunk loading could fail.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `BUGFIX`, `LTS`
+
+### stackableShulkerLimitAllContainers
+> [!NOTE]
+This overrides any other `stackableShulkerLimit` rule.
+
+Allows empty shulker boxes to stack to the set amount when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### stackableShulkerLimitHoppers
+Allows empty shulker boxes to stack to the set amount inside hoppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### stackableShulkerLimitDroppers
+Allows empty shulker boxes to stack to the set amount inside droppers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
+
+### stackableShulkerLimitDispensers
+Allows empty shulker boxes to stack to the set amount inside dispensers when being transferred by hoppers. This is intended to be used with `stackableShulkerBoxes`.
+* Type: `String`
+* Default value: `false`
+* Allowed options: `false`, `1-64`
+* Categories: `FEATURE`, `LTS`
 
 ### carpetBotsSkipNight
 Allows the night to be skipped without carpet bots/fake players being asleep.
