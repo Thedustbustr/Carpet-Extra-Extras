@@ -21,6 +21,7 @@ public class CarpetExtraExtrasSettings {
   public static final String LTS = "LTS";
   public static final String COMMAND = "Command";
   public static final String VANILLA = "Vanilla";
+  public static final String EXPERIMENTAL = "Experimental";
   public static final int MAX_TEAM_NAME_LENGTH = 64;
   public static final int MAX_TEAM_PREFIX_LENGTH = 16;
 
@@ -51,7 +52,7 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {VANILLA, BUGFIX, MOD}, validators = enderPearlChunkLoadingFixValidator.class)
+  @Rule(categories = {VANILLA, BUGFIX, MOD, EXPERIMENTAL}, validators = enderPearlChunkLoadingFixValidator.class)
   public static boolean enderPearlChunkLoadingFix = false;
 
   @Rule(categories = {FEATURE, BUGFIX, LTS, MOD})
