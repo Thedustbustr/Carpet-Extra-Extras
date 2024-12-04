@@ -38,15 +38,18 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   }
 
   @Inject(method = "tick", at = @At(value = "HEAD"), cancellable = true)
-  private void tick(CallbackInfo info) {
+  private void tick(CallbackInfo original) {
     if (!(this.level() instanceof ServerLevel serverLevel)) return;
+    boolean stuck = false;
 
     if (CarpetExtraExtrasSettings.enderPearlChunkLoadingFix || CarpetExtraExtrasSettings.trackEnderPearls) {
-      updatePearlManager(info, serverLevel);
+      stuck = updatePearlManager(original, serverLevel);
     }
 
+    if (stuck) return;
+
     if (CarpetExtraExtrasSettings.pre21ThrowableEntityBehavior) {
-      applyPre21Behavior(info);
+      applyPre21Behavior(original);
     }
   }
 
@@ -56,7 +59,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   }
 
   @Unique
-  private void updatePearlManager(CallbackInfo info, ServerLevel serverLevel) {
+  private boolean updatePearlManager(CallbackInfo original, ServerLevel serverLevel) {
     Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
     Vec3 velocity = this.getDeltaMovement();
 
@@ -68,9 +71,12 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
       PearlManager.tryLoadChunks(this.getSelf(), position, velocity);
 
       if (!PearlManager.isEntityTickingChunk(serverLevel, ChunkHelper.calculateChunkPos(position.add(velocity)))) {
-        info.cancel(); // Cancel the rest of the original tick method
+        original.cancel(); // Cancel the rest of the original tick method
+        return true;
       }
     }
+
+    return false;
   }
 
   @Unique
