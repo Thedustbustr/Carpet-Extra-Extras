@@ -12,7 +12,7 @@ import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CEE_Rule;
 import net.thedustbuster.rules.CarpetBotTeam;
-import net.thedustbuster.rules.enderpearls.EnderPearlRules;
+import net.thedustbuster.rules.PearlTracking;
 import net.thedustbuster.util.TickDelayManager;
 import net.thedustbuster.util.option.Option;
 import org.apache.commons.io.IOUtils;
@@ -51,7 +51,7 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
 
     /* Register Rules */
     registerRule(CarpetBotTeam.INSTANCE);
-    registerRule(EnderPearlRules.INSTANCE);
+    registerRule(PearlTracking.INSTANCE);
   }
 
   @Override
