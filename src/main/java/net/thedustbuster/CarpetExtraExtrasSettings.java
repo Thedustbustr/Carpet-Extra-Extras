@@ -8,7 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CarpetBotTeam;
-import net.thedustbuster.rules.enderpearls.PearlManager;
+import net.thedustbuster.rules.PearlTracking;
 import net.thedustbuster.util.Attempt;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +21,7 @@ public class CarpetExtraExtrasSettings {
   public static final String LTS = "LTS";
   public static final String COMMAND = "Command";
   public static final String VANILLA = "Vanilla";
+  public static final String OPTIMIZATION = "Optimization";
   public static final String EXPERIMENTAL = "Experimental";
   public static final int MAX_TEAM_NAME_LENGTH = 64;
   public static final int MAX_TEAM_PREFIX_LENGTH = 16;
@@ -52,11 +53,11 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {VANILLA, BUGFIX, MOD, EXPERIMENTAL}, validators = enderPearlChunkLoadingFixValidator.class)
-  public static boolean enderPearlChunkLoadingFix = false;
-
   @Rule(categories = {FEATURE, BUGFIX, LTS, MOD})
   public static boolean pre21ThrowableEntityBehavior = false;
+
+  @Rule(categories = {FEATURE, OPTIMIZATION, MOD})
+  public static boolean optimizedTNTInteraction = false;
 
   @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";
@@ -96,16 +97,7 @@ public class CarpetExtraExtrasSettings {
   private static class trackEnderPearlsValidator extends Validator<Boolean> {
     @Override
     public Boolean validate(@Nullable CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
-      if (!newValue) getMinecraftServer().whenDefined(server -> server.execute(PearlManager::removedAllTrackedPearls));
-
-      return newValue;
-    }
-  }
-
-  private static class enderPearlChunkLoadingFixValidator extends Validator<Boolean> {
-    @Override
-    public Boolean validate(@Nullable CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
-      if (!newValue) getMinecraftServer().whenDefined(server -> server.execute(PearlManager::removedAllHighSpeedPearls));
+      if (!newValue) getMinecraftServer().whenDefined(server -> server.execute(PearlTracking::removedAllTrackedPearls));
 
       return newValue;
     }
