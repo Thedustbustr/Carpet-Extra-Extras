@@ -10,7 +10,7 @@ Tracks all thrown Ender Pearls on the server; this must be enabled for `/log pea
 * Categories: `VANILLA`
 
 ### pre21ThrowableEntityBehavior
-Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present. This also fixes 2 bugs that were introduced with 1.21.2: At high speeds an Ender Pearl would land in the wrong position and chunk loading, in very rare instances, would fail.
+Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, specifically behavior found in 24w28a where the thrown randomness changes are present.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
