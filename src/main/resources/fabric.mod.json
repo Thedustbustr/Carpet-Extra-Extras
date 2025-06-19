@@ -12,7 +12,7 @@
     "sources": "https://github.com/Thedustbustr/Carpet-Extra-Extras"
   },
   "license": "MIT",
-  "icon": "assets/carpet-extra-extras/icon.jpg",
+  "icon": "assets/carpet-extra-extras/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -25,7 +25,8 @@
   "depends": {
     "fabricloader": ">=0.16.10",
     "minecraft": [
-      "1.21.5"
+      "1.21.5",
+      "1.21.6"
     ],
     "java": ">=21",
     "carpet": "*"
