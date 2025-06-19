@@ -81,7 +81,7 @@ public class CarpetExtraExtrasSettings {
   public static String carpetBotTeamName = "cee_bots";
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamPrefixValidator.class)
-  public static String carpetBotTeamPrefix = "[Bots]";
+  public static String carpetBotTeamPrefix = "[Bot]";
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamColor = ChatFormatting.GRAY;

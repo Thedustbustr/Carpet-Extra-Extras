@@ -60,12 +60,11 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   public static void updateTeam(boolean carpetBotTeam) {
     team = Option.of(getScoreboard().getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    team.whenDefined(t -> getScoreboard().removePlayerTeam(t));
 
     if (carpetBotTeam) {
-      team.whenEmpty(CarpetBotTeam::createTeam);
+      CarpetBotTeam.createTeam();
       updatePlayers();
-    } else {
-      team.whenDefined(t -> getScoreboard().removePlayerTeam(t));
     }
   }
 
