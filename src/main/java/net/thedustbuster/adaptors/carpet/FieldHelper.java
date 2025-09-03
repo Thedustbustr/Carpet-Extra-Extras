@@ -1,8 +1,8 @@
 package net.thedustbuster.adaptors.carpet;
 
-import net.thedustbuster.util.Attempt;
 import net.thedustbuster.util.Logger;
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.func.Attempt;
+import net.thedustbuster.util.func.option.Option;
 
 import java.lang.reflect.Field;
 
@@ -35,5 +35,4 @@ public final class FieldHelper {
         return Option.empty();
       });
   }
-
 }

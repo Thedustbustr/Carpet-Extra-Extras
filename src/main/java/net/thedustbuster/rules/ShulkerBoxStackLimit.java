@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.DropperBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.func.option.Option;
 
 import static net.thedustbuster.CarpetExtraExtrasSettings.*;
 
@@ -26,9 +26,9 @@ public final class ShulkerBoxStackLimit {
 
   private static boolean ruleEnabled() {
     return getStackableShulkerLimitAllContainers() != -1
-            || getStackableShulkerLimitHoppers() != -1
-            || getStackableShulkerLimitDroppers() != -1
-            || getStackableShulkerLimitDispensers() != -1;
+      || getStackableShulkerLimitHoppers() != -1
+      || getStackableShulkerLimitDroppers() != -1
+      || getStackableShulkerLimitDispensers() != -1;
   }
 
   public static Option<Boolean> canMergeItems(ItemStack stack1, ItemStack stack2, Container destinationContainer) {

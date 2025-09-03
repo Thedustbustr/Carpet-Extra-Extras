@@ -1,4 +1,4 @@
-package net.thedustbuster.util.option;
+package net.thedustbuster.util.func.option;
 
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -7,6 +7,12 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class None<T> extends Option<T> {
+  private None() { }
+  private static final Option<?> None = new None<>();
+
+  @SuppressWarnings("unchecked")
+  public static <T> Option<T> None() { return (Option<T>) None; }
+
   @Override
   public T get() {
     throw new NoSuchElementException("No value present");
@@ -28,7 +34,7 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
-  public <E extends Throwable> T orElseThrow(Supplier<? extends E> exceptionSupplier) throws E {
+  public <E extends Throwable> T getOrThrow(Supplier<? extends E> exceptionSupplier) throws E {
     throw exceptionSupplier.get();
   }
 
@@ -43,9 +49,15 @@ public final class None<T> extends Option<T> {
   }
 
   @Override
+  public Option<T> whenDefined(Runnable runnable) { return this; }
+
+  @Override
   public boolean isDefined() {
     return false;
   }
+
+  @Override
+  public void isDefinedOrElse(Consumer<? super T> consumer, Runnable runnable) { runnable.run(); }
 
   @Override
   public Option<T> whenEmpty(Runnable runnable) {
@@ -60,12 +72,12 @@ public final class None<T> extends Option<T> {
 
   @Override
   public <U> Option<U> map(Function<? super T, ? extends U> mapper) {
-    return new None<>();
+    return None();
   }
 
   @Override
   public <U> Option<U> flatMap(Function<? super T, Option<U>> mapper) {
-    return new None<>();
+    return None();
   }
 
   @Override
