@@ -1,4 +1,4 @@
-package net.thedustbuster.util;
+package net.thedustbuster.util.minecraft;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

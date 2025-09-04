@@ -4,8 +4,8 @@ import carpet.logging.HUDLogger;
 import carpet.logging.LoggerRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.thedustbuster.util.TextBuilder;
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.func.option.Option;
+import net.thedustbuster.util.minecraft.TextBuilder;
 
 public final class LoggerHelper {
   public static Option<HUDLogger> createHUDLogger(String name) {

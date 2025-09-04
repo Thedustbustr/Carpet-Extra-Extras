@@ -4,14 +4,13 @@ import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.adaptors.carpet.LoggerHelper;
-import net.thedustbuster.util.TextBuilder;
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.func.option.Option;
+import net.thedustbuster.util.minecraft.TextBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -27,8 +26,8 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   private static Scoreboard getScoreboard() {
     return Option.of(CarpetServer.minecraft_server)
-      .map(MinecraftServer::getScoreboard)
-      .orElseThrow(() -> new IllegalStateException("Minecraft Server is not ready"));
+      .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"))
+      .getScoreboard();
   }
 
   private static Option<PlayerTeam> team = Option.empty();

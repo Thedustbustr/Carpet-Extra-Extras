@@ -1,8 +1,9 @@
 package net.thedustbuster.util;
 
 import net.thedustbuster.CarpetExtraExtrasServer;
+import net.thedustbuster.util.func.Unit;
 
-import static net.thedustbuster.util.Unit.Unit;
+import static net.thedustbuster.util.func.Unit.Unit;
 
 public final class Logger {
   public static Unit info(String str) {

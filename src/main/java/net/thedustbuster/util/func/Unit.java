@@ -1,4 +1,4 @@
-package net.thedustbuster.util;
+package net.thedustbuster.util.func;
 
 public final class Unit {
   private Unit() { }

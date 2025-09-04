@@ -14,8 +14,12 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.adaptors.minecraft.MessagingHelper;
-import net.thedustbuster.util.*;
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.Logger;
+import net.thedustbuster.util.Tuple;
+import net.thedustbuster.util.func.Attempt;
+import net.thedustbuster.util.func.Unit;
+import net.thedustbuster.util.func.option.Option;
+import net.thedustbuster.util.minecraft.TextBuilder;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -23,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static net.minecraft.commands.Commands.literal;
-import static net.thedustbuster.util.Unit.Unit;
+import static net.thedustbuster.util.func.Unit.Unit;
 
 public final class CamCommand implements CEE_Command {
   public static final CamCommand INSTANCE = new CamCommand();

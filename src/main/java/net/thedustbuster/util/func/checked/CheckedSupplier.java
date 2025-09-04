@@ -1,4 +1,4 @@
-package net.thedustbuster.util.checked;
+package net.thedustbuster.util.func.checked;
 
 @FunctionalInterface
 public interface CheckedSupplier<T> {

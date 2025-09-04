@@ -5,14 +5,14 @@ import carpet.logging.LoggerRegistry;
 import net.thedustbuster.adaptors.carpet.FieldHelper;
 import net.thedustbuster.rules.CarpetBotTeam;
 import net.thedustbuster.rules.PearlTracking;
-import net.thedustbuster.util.Attempt;
+import net.thedustbuster.util.func.Attempt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.thedustbuster.util.Unit.Unit;
+import static net.thedustbuster.util.func.Unit.Unit;
 
 @Mixin(HUDController.class)
 public abstract class HUDControllerMixin {

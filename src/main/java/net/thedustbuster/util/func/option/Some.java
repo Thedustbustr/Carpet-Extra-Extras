@@ -1,4 +1,4 @@
-package net.thedustbuster.util.option;
+package net.thedustbuster.util.func.option;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,9 +11,11 @@ import java.util.function.Supplier;
 public final class Some<T> extends Option<T> {
   private final T value;
 
-  public Some(@NotNull T value) {
+  private Some(@NotNull T value) {
     this.value = Objects.requireNonNull(value, "Value cannot be null");
   }
+
+  public static <T> Option<T> Some(@NotNull T value) { return new Some<>(Objects.requireNonNull(value, "Value cannot be null")); }
 
   @Override
   public T get() {
@@ -36,7 +38,7 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
-  public <E extends Throwable> T orElseThrow(Supplier<? extends E> exceptionSupplier) {
+  public <E extends Throwable> T getOrThrow(Supplier<? extends E> exceptionSupplier) {
     return value;
   }
 
@@ -52,9 +54,18 @@ public final class Some<T> extends Option<T> {
   }
 
   @Override
+  public Option<T> whenDefined(Runnable runnable) {
+    runnable.run();
+    return this;
+  }
+
+  @Override
   public boolean isDefined() {
     return true;
   }
+
+  @Override
+  public void isDefinedOrElse(Consumer<? super T> consumer, Runnable runnable) { consumer.accept(value); }
 
   @Override
   public Option<T> whenEmpty(Runnable runnable) {

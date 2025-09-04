@@ -1,6 +1,6 @@
-package net.thedustbuster.util;
+package net.thedustbuster.util.func;
 
-import net.thedustbuster.util.option.Option;
+import net.thedustbuster.util.func.option.Option;
 
 import java.util.function.Function;
 
@@ -34,11 +34,11 @@ public class Either<L, R> {
   }
 
   public R getRight() {
-    return right.orElseThrow(() -> new IllegalStateException("Tried to get right value from a left Either."));
+    return right.getOrThrow(() -> new IllegalStateException("Tried to get right value from a left Either."));
   }
 
   public L getLeft() {
-    return left.orElseThrow(() -> new IllegalStateException("Tried to get left value from a right Either."));
+    return left.getOrThrow(() -> new IllegalStateException("Tried to get left value from a right Either."));
   }
 
   public <T> Either<L, T> map(Function<R, T> fn) {

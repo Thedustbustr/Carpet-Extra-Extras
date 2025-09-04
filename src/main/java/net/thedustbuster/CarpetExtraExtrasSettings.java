@@ -9,7 +9,6 @@ import net.thedustbuster.commands.CEE_Command;
 import net.thedustbuster.commands.CamCommand;
 import net.thedustbuster.rules.CarpetBotTeam;
 import net.thedustbuster.rules.PearlTracking;
-import net.thedustbuster.util.Attempt;
 import org.jetbrains.annotations.Nullable;
 
 import static net.thedustbuster.CarpetExtraExtrasServer.getMinecraftServer;
@@ -35,62 +34,68 @@ public class CarpetExtraExtrasSettings {
   }
 
   // ###################### [ Type Conversion ] ###################### \\
-  public static int getStackableShulkerLimitAllContainers() { return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitAllContainers)).getOrHandle((Exception e) -> -1); }
+  public static int getStackableShulkerLimitAllContainers() {
+    return stackableShulkerLimitAllContainersParsed;
+  }
 
   public static int getStackableShulkerLimitHoppers() {
-    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitHoppers)).getOrHandle((Exception e) -> -1);
+    return stackableShulkerLimitHoppersParsed;
   }
 
   public static int getStackableShulkerLimitDroppers() {
-    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitDroppers)).getOrHandle((Exception e) -> -1);
+    return stackableShulkerLimitDroppersParsed;
   }
 
   public static int getStackableShulkerLimitDispensers() {
-    return Attempt.create(() -> Integer.parseInt(stackableShulkerLimitDispensers)).getOrHandle((Exception e) -> -1);
+    return stackableShulkerLimitDispensersParsed;
   }
 
   // ###################### [ Rules ] ###################### \\
-  @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
+  @Rule(categories = { VANILLA, MOD }, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {FEATURE, BUGFIX, LTS, MOD})
+  @Rule(categories = { FEATURE, BUGFIX, LTS, MOD })
   public static boolean pre21ThrowableEntityBehavior = false;
 
-  @Rule(categories = {FEATURE, OPTIMIZATION, MOD})
+  @Rule(categories = { FEATURE, OPTIMIZATION, MOD })
   public static boolean optimizedTNTInteraction = false;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";
+  private static int stackableShulkerLimitAllContainersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitHoppers = "false";
+  private static int stackableShulkerLimitHoppersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDroppers = "false";
+  private static int stackableShulkerLimitDroppersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = stackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDispensers = "false";
+  private static int stackableShulkerLimitDispensersParsed = -1;
 
-  @Rule(categories = {FEATURE, MOD})
+  @Rule(categories = { FEATURE, MOD })
   public static boolean carpetBotsSkipNight = false;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamValidator.class)
   public static boolean carpetBotTeam = false;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamNameValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamNameValidator.class)
   public static String carpetBotTeamName = "cee_bots";
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamPrefixValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamPrefixValidator.class)
   public static String carpetBotTeamPrefix = "[Bot]";
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamColor = ChatFormatting.GRAY;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
   // ###################### [ Commands ] ###################### \\
-  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CamCommandValidator.class)
+  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CamCommandValidator.class)
   public static String commandCam = "false";
 
   // ###################### [ Validators ] ###################### \\
@@ -103,17 +108,26 @@ public class CarpetExtraExtrasSettings {
     }
   }
 
-  private static class stackableShulkerValidator extends Validator<String> {
+  private static class StackableShulkerValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      if (newValue.equals("false")) return newValue;
+      int parsed = -1;
 
-      boolean validInt = Attempt.create(() -> {
-        int i = Integer.parseInt(newValue);
-        return i > 0 && i <= 64;
-      }).getOrHandle((Exception e) -> false);
+      if (!newValue.equals("false")) {
+        try {
+          parsed = Integer.parseInt(newValue);
+          if (parsed < 1 || parsed > 64) return null;
+        } catch (NumberFormatException e) { return null; }
+      }
 
-      return validInt ? newValue : null;
+      switch (changingRule.name()) {
+        case "stackableShulkerLimitAllContainers" -> stackableShulkerLimitAllContainersParsed = parsed;
+        case "stackableShulkerLimitHoppers" -> stackableShulkerLimitHoppersParsed = parsed;
+        case "stackableShulkerLimitDroppers" -> stackableShulkerLimitDroppersParsed = parsed;
+        case "stackableShulkerLimitDispensers" -> stackableShulkerLimitDispensersParsed = parsed;
+      }
+
+      return newValue;
     }
 
     @Override

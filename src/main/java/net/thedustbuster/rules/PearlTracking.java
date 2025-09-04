@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.phys.Vec3;
-import net.thedustbuster.util.TextBuilder;
+import net.thedustbuster.util.minecraft.TextBuilder;
 
 import java.util.Collections;
 import java.util.HashMap;
