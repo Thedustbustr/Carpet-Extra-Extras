@@ -54,7 +54,7 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { VANILLA, MOD }, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = { FEATURE, BUGFIX, LTS, MOD })
+  @Rule(categories = { FEATURE, LTS, MOD })
   public static boolean pre21ThrowableEntityBehavior = false;
 
   @Rule(categories = { FEATURE, OPTIMIZATION, MOD })

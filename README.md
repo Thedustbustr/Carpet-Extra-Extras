@@ -14,7 +14,7 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `BUGFIX`, `LTS`
+* Categories: `FEATURE`, `LTS`
 
 ### optimizedTNTInteraction
 Optimizes force calculations between exploding TNT entities. This can grant significant performance gains for Ender Pearl Cannons.
