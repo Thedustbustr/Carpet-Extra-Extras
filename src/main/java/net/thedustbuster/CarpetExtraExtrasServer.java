@@ -91,11 +91,14 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
     InputStream langFile = CarpetExtraExtrasServer.class.getClassLoader().getResourceAsStream("assets/carpet-extra-extras/lang/%s.json".formatted(lang));
     if (langFile == null) {
       return Collections.emptyMap();
-    } String jsonData; try {
+    }
+    String jsonData;
+    try {
       jsonData = IOUtils.toString(langFile, StandardCharsets.UTF_8);
     } catch (IOException e) {
       return Collections.emptyMap();
-    } Gson gson = new GsonBuilder().setLenient().create(); // lenient allows for comments
+    }
+    Gson gson = new GsonBuilder().create();
     return gson.fromJson(jsonData, new TypeToken<Map<String, String>>() { }.getType());
   }
 }
