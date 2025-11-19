@@ -4,12 +4,16 @@ import carpet.utils.CommandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasServer;
@@ -40,7 +44,15 @@ public final class CamCommand implements CEE_Command {
     CarpetExtraExtrasServer.registerCommand(INSTANCE);
   }
 
-  private final Map<UUID, PreSpectatePlayerData> playerDataMap = new HashMap<>();
+  private static final Map<UUID, FreecamData> playerDataMap = new HashMap<>();
+
+  public static Option<FreecamData> getPlayerData(UUID id) {
+    return Option.of(playerDataMap.get(id));
+  }
+
+  public static void addPlayerData(UUID id, FreecamData data) {
+    playerDataMap.put(id, data);
+  }
 
   @Override
   public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -71,12 +83,11 @@ public final class CamCommand implements CEE_Command {
   }
 
   private Unit enterFreecam(ServerPlayer player) {
-    PreSpectatePlayerData data = new PreSpectatePlayerData(
-      player.getUUID(),
+    FreecamData data = new FreecamData(
       player.gameMode.getGameModeForPlayer(),
       player.position(),
       player.getRotationVector(),
-      (ServerLevel) player.level()
+      player.level().dimension()
     );
 
     playerDataMap.put(player.getUUID(), data);
@@ -91,27 +102,32 @@ public final class CamCommand implements CEE_Command {
     return Unit;
   }
 
-  private Unit exitFreecam(ServerPlayer player, PreSpectatePlayerData data) {
-    player.setGameMode(data.originalGamemode());
-    player.teleportTo(
-      data.level(),
-      data.position().x(),
-      data.position().y(),
-      data.position().z(),
-      EnumSet.noneOf(Relative.class),
-      data.rotation().y,
-      data.rotation().x,
-      true
-    );
+  private Unit exitFreecam(ServerPlayer player, FreecamData data) {
+    return CarpetExtraExtrasServer.getMinecraftServer().fold(
+      server -> {
+        player.setGameMode(data.gamemode());
+        player.teleportTo(
+          server.getLevel(data.level()),
+          data.position().x(),
+          data.position().y(),
+          data.position().z(),
+          EnumSet.noneOf(Relative.class),
+          data.rotation().y,
+          data.rotation().x,
+          true
+        );
 
-    playerDataMap.remove(player.getUUID());
-    MessagingHelper.sendActionBarMessage(player,
-      new TextBuffer()
-        .addText("Gamemode: ", ChatFormatting.GOLD)
-        .addText(data.originalGamemode.getName().toUpperCase(), ChatFormatting.WHITE)
-        .build()
+        playerDataMap.remove(player.getUUID());
+        MessagingHelper.sendActionBarMessage(player,
+          new TextBuffer()
+            .addText("Gamemode: ", ChatFormatting.GOLD)
+            .addText(data.gamemode.getName().toUpperCase(), ChatFormatting.WHITE)
+            .build()
+        );
+        return Unit;
+      },
+      () -> Logger.warn("Attempted to access non-ready server instance, cannot exit freecam!")
     );
-    return Unit;
   }
 
   private Unit handleExecutionError(Throwable e) {
@@ -124,5 +140,15 @@ public final class CamCommand implements CEE_Command {
     return Unit;
   }
 
-  private record PreSpectatePlayerData(UUID id, GameType originalGamemode, Vec3 position, Vec2 rotation, ServerLevel level) { }
+  public record FreecamData(GameType gamemode, Vec3 position, Vec2 rotation, ResourceKey<Level> level) {
+    public static final Codec<FreecamData> CODEC =
+      RecordCodecBuilder.create(instance ->
+        instance.group(
+          GameType.CODEC.fieldOf("gamemode").forGetter(FreecamData::gamemode),
+          Vec3.CODEC.fieldOf("position").forGetter(FreecamData::position),
+          Vec2.CODEC.fieldOf("rotation").forGetter(FreecamData::rotation),
+          ResourceKey.codec(Registries.DIMENSION).fieldOf("level").forGetter(FreecamData::level)
+        ).apply(instance, FreecamData::new)
+      );
+  }
 }

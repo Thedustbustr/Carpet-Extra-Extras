@@ -8,6 +8,7 @@
     "LoggerRegistryMixin",
     "ProjectileAccessor",
     "ProjectileMixin",
+    "ServerPlayerMixin",
     "SleepStatusMixin",
     "ThrowableProjectileMixin",
     "ThrownEnderpearlMixin",

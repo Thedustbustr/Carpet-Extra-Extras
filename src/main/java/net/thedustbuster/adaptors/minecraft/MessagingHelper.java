@@ -11,7 +11,7 @@ public final class MessagingHelper {
   private MessagingHelper() { }
 
   public static void sendActionBarMessage(ServerPlayer player, Component text) {
-    sendActionBarMessage(new ServerPlayer[] {player}, text);
+    sendActionBarMessage(new ServerPlayer[]{ player }, text);
   }
 
   public static void sendActionBarMessage(ServerPlayer[] players, Component text) {
