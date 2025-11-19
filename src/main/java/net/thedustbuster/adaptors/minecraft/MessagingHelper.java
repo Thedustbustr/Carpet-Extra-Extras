@@ -3,7 +3,7 @@ package net.thedustbuster.adaptors.minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.thedustbuster.util.func.option.Option;
+import net.thedustbuster.libs.func.option.Option;
 
 import java.util.Arrays;
 

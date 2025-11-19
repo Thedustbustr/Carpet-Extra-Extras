@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.thedustbuster.util.func.Unit.Unit;
+import static net.thedustbuster.libs.func.Unit.Unit;
 
 @Mixin(LoggerRegistry.class)
 public abstract class LoggerRegistryMixin {

@@ -1,4 +1,4 @@
-package net.thedustbuster.util.minecraft;
+package net.thedustbuster.util;
 
 import java.util.HashSet;
 import java.util.Set;

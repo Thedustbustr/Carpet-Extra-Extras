@@ -7,18 +7,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
+import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.adaptors.carpet.LoggerHelper;
-import net.thedustbuster.util.func.option.Option;
-import net.thedustbuster.util.minecraft.TextBuilder;
+import net.thedustbuster.adaptors.minecraft.text.TextBuffer;
+import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
+import net.thedustbuster.libs.func.option.Option;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@LoadAtRuntime
 public final class CarpetBotTeam implements CEE_Rule {
-  public static final CarpetBotTeam INSTANCE = new CarpetBotTeam();
+  private static final CarpetBotTeam SELF = new CarpetBotTeam();
+  private CarpetBotTeam() { }
+
+  static {
+    CarpetExtraExtrasServer.registerRule(SELF);
+  }
 
   public static int getBots() {
     return getBotPlayers().size();
@@ -42,8 +50,8 @@ public final class CarpetBotTeam implements CEE_Rule {
     if (player instanceof EntityPlayerMPFake) updateTeam();
   }
 
-  public Component[] createHUD() {
-    TextBuilder text = new TextBuilder()
+  public static Component[] createHUD() {
+    TextBuffer text = new TextBuffer()
       .addText("Players: ", List.of(ChatFormatting.WHITE))
       .addText(String.valueOf(CarpetServer.minecraft_server.getPlayerCount() - getBots()), List.of(ChatFormatting.DARK_GREEN))
       .addText(" Bots: ", List.of(ChatFormatting.WHITE))
@@ -89,6 +97,6 @@ public final class CarpetBotTeam implements CEE_Rule {
         .filter(player -> player instanceof EntityPlayerMPFake)
         .collect(Collectors.toSet())
       )
-      .orElse(Set.of());
+      .getOrElse(Set.of());
   }
 }

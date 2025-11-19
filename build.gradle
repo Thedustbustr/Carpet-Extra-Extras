@@ -6,6 +6,14 @@ repositories {
 	maven {
 		url 'https://masa.dy.fi/maven'
 	}
+
+    maven {
+      url 'https://gitlab.com/api/v4/projects/76146809/packages/maven'
+    }
+
+    maven {
+      url 'https://gitlab.com/api/v4/projects/76147521/packages/maven'
+    }
 }
 
 version = project.mod_version
@@ -21,6 +29,9 @@ dependencies {
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "carpet:fabric-carpet:${project.carpet_core_version}"
+
+    include implementation("net.thedustbuster.libs:core:${project.java_libs_core_version}")
+    include implementation("net.thedustbuster.libs:func:${project.java_libs_functional_version}")
 }
 
 processResources {
@@ -37,8 +48,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	withSourcesJar()
-
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }

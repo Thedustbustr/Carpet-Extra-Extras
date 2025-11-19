@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.DropperBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
-import net.thedustbuster.util.func.option.Option;
+import net.thedustbuster.libs.func.option.Option;
 
 import static net.thedustbuster.CarpetExtraExtrasSettings.*;
 

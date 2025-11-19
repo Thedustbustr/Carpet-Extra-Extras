@@ -1,8 +1,8 @@
 package net.thedustbuster.adaptors.carpet;
 
+import net.thedustbuster.libs.func.Attempt;
+import net.thedustbuster.libs.func.option.Option;
 import net.thedustbuster.util.Logger;
-import net.thedustbuster.util.func.Attempt;
-import net.thedustbuster.util.func.option.Option;
 
 import java.lang.reflect.Field;
 
