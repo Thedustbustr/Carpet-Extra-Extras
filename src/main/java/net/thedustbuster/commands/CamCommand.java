@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
@@ -103,31 +104,29 @@ public final class CamCommand implements CEE_Command {
   }
 
   private Unit exitFreecam(ServerPlayer player, FreecamData data) {
-    return CarpetExtraExtrasServer.getMinecraftServer().fold(
-      server -> {
-        player.setGameMode(data.gamemode());
-        player.teleportTo(
-          server.getLevel(data.level()),
-          data.position().x(),
-          data.position().y(),
-          data.position().z(),
-          EnumSet.noneOf(Relative.class),
-          data.rotation().y,
-          data.rotation().x,
-          true
-        );
+    MinecraftServer server = CarpetExtraExtrasServer.getMinecraftServer()
+      .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"));
 
-        playerDataMap.remove(player.getUUID());
-        MessagingHelper.sendActionBarMessage(player,
-          new TextBuffer()
-            .addText("Gamemode: ", ChatFormatting.GOLD)
-            .addText(data.gamemode.getName().toUpperCase(), ChatFormatting.WHITE)
-            .build()
-        );
-        return Unit;
-      },
-      () -> Logger.warn("Attempted to access non-ready server instance, cannot exit freecam!")
+    player.setGameMode(data.gamemode());
+    player.teleportTo(
+      server.getLevel(data.level()),
+      data.position().x(),
+      data.position().y(),
+      data.position().z(),
+      EnumSet.noneOf(Relative.class),
+      data.rotation().y,
+      data.rotation().x,
+      true
     );
+
+    playerDataMap.remove(player.getUUID());
+    MessagingHelper.sendActionBarMessage(player,
+      new TextBuffer()
+        .addText("Gamemode: ", ChatFormatting.GOLD)
+        .addText(data.gamemode.getName().toUpperCase(), ChatFormatting.WHITE)
+        .build()
+    );
+    return Unit;
   }
 
   private Unit handleExecutionError(Throwable e) {

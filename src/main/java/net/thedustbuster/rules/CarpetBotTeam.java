@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static net.thedustbuster.libs.func.option.None.None;
+
 @LoadAtRuntime
 public final class CarpetBotTeam implements CEE_Rule {
   private static final CarpetBotTeam SELF = new CarpetBotTeam();
@@ -27,18 +29,6 @@ public final class CarpetBotTeam implements CEE_Rule {
   static {
     CarpetExtraExtrasServer.registerRule(SELF);
   }
-
-  public static int getBots() {
-    return getBotPlayers().size();
-  }
-
-  private static Scoreboard getScoreboard() {
-    return Option.of(CarpetServer.minecraft_server)
-      .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"))
-      .getScoreboard();
-  }
-
-  private static Option<PlayerTeam> team = Option.empty();
 
   @Override
   public void onPlayerLoggedIn(ServerPlayer player) {
@@ -61,6 +51,17 @@ public final class CarpetBotTeam implements CEE_Rule {
   }
 
   // ###################### [ Team ] ###################### \\
+  private static Option<PlayerTeam> team = None();
+  public static int getBots() {
+    return getBotPlayers().size();
+  }
+
+  private static Scoreboard getScoreboard() {
+    return Option.of(CarpetServer.minecraft_server)
+      .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"))
+      .getScoreboard();
+  }
+
   public static void updateTeam() {
     updateTeam(CarpetExtraExtrasSettings.carpetBotTeam);
   }

@@ -26,32 +26,30 @@ import java.util.List;
 import java.util.Map;
 
 public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitializer {
-  public static final Logger LOGGER = LoggerFactory.getLogger("carpet-extra-extras");
+  public static final String MOD_ID = "carpet-extra-extras";
+  public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
   private static final List<CEE_Rule> rules = new ArrayList<>();
   private static final List<CEE_Command> commands = new ArrayList<>();
-
   public static void registerRule(CEE_Rule r) { rules.add(r); }
   public static void registerCommand(CEE_Command c) { commands.add(c); }
 
   public static Option<MinecraftServer> getMinecraftServer() {
-    return Option.of(CarpetServer.minecraft_server)
-      .filter(MinecraftServer::isReady);
+    return Option.of(CarpetServer.minecraft_server).filter(MinecraftServer::isReady);
   }
 
   @Override
   public void onInitialize() {
     CarpetServer.manageExtension(this);
 
-    /* Self Rules */
-    new ClassLoader("net.thedustbuster.carpet-extra-extra.rules").load();
-
-    /* Load Commands */
-    new ClassLoader("net.thedustbuster.carpet-extra-extra.commands").load();
+    /* Load rules and commands */
+    new ClassLoader("net.thedustbuster." + MOD_ID + ".rules").load();
+    new ClassLoader("net.thedustbuster." + MOD_ID + ".commands").load();
   }
 
   @Override
   public void onServerLoaded(MinecraftServer server) {
-    /* Register Commands */
+    /* Register commands */
     commands.forEach(c -> c.register(server.getCommands().getDispatcher()));
   }
 
