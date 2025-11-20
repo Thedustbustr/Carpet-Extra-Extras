@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.phys.Vec3;
-import net.thedustbuster.util.minecraft.TextBuilder;
+import net.thedustbuster.adaptors.minecraft.text.TextBuffer;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PearlTracking implements CEE_Rule {
-  public static final PearlTracking INSTANCE = new PearlTracking();
   private static final Map<UUID, EnderPearlData> trackedEnderPearls = new HashMap<>();
 
   public static Map<UUID, EnderPearlData> getTrackedEnderPearls() {
@@ -33,7 +32,7 @@ public class PearlTracking implements CEE_Rule {
     trackedEnderPearls.computeIfAbsent(entity.getUUID(), id -> new EnderPearlData(entity, position, velocity)).updatePositionAndVelocity(position, velocity);
   }
 
-  public Component[] createHUD() {
+  public static Component[] createHUD() {
     return PearlTracking.getTrackedEnderPearls().entrySet().stream()
       .map(entry -> {
         UUID key = entry.getKey();
@@ -43,13 +42,10 @@ public class PearlTracking implements CEE_Rule {
         String velocity = Mth.floor(pearl.getVelocity().length() * 20) + "m/s";
         String position = String.format("(%d, %d, %d)", pearl.getIPosition().getX(), pearl.getIPosition().getY(), pearl.getIPosition().getZ());
 
-        return new TextBuilder()
-          .addText("Pearl: ", ChatFormatting.DARK_AQUA)
-          .addText(uuid, ChatFormatting.WHITE)
-          .addText(" Velocity: ", ChatFormatting.DARK_AQUA)
-          .addText(velocity, ChatFormatting.WHITE)
-          .addText(" Position: ", ChatFormatting.DARK_AQUA)
-          .addText(position, ChatFormatting.WHITE)
+        return new TextBuffer()
+          .addText("Pearl: ", ChatFormatting.DARK_AQUA).addText(uuid, ChatFormatting.WHITE)
+          .addText(" Velocity: ", ChatFormatting.DARK_AQUA).addText(velocity, ChatFormatting.WHITE)
+          .addText(" Position: ", ChatFormatting.DARK_AQUA).addText(position, ChatFormatting.WHITE)
           .build();
       })
       .toArray(Component[]::new);

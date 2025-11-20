@@ -4,22 +4,29 @@ import carpet.utils.CommandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.thedustbuster.CarpetExtraExtrasServer;
 import net.thedustbuster.CarpetExtraExtrasSettings;
 import net.thedustbuster.adaptors.minecraft.MessagingHelper;
+import net.thedustbuster.adaptors.minecraft.text.TextBuffer;
+import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
+import net.thedustbuster.libs.core.tuple.Pair;
+import net.thedustbuster.libs.func.Attempt;
+import net.thedustbuster.libs.func.Unit;
+import net.thedustbuster.libs.func.option.Option;
 import net.thedustbuster.util.Logger;
-import net.thedustbuster.util.Tuple;
-import net.thedustbuster.util.func.Attempt;
-import net.thedustbuster.util.func.Unit;
-import net.thedustbuster.util.func.option.Option;
-import net.thedustbuster.util.minecraft.TextBuilder;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -27,11 +34,26 @@ import java.util.Map;
 import java.util.UUID;
 
 import static net.minecraft.commands.Commands.literal;
-import static net.thedustbuster.util.func.Unit.Unit;
+import static net.thedustbuster.libs.func.Unit.Unit;
 
+@LoadAtRuntime
 public final class CamCommand implements CEE_Command {
   public static final CamCommand INSTANCE = new CamCommand();
-  private final Map<UUID, PreSpectatePlayerData> playerDataMap = new HashMap<>();
+  private CamCommand() { }
+
+  static {
+    CarpetExtraExtrasServer.registerCommand(INSTANCE);
+  }
+
+  private static final Map<UUID, FreecamData> playerDataMap = new HashMap<>();
+
+  public static Option<FreecamData> getPlayerData(UUID id) {
+    return Option.of(playerDataMap.get(id));
+  }
+
+  public static void addPlayerData(UUID id, FreecamData data) {
+    playerDataMap.put(id, data);
+  }
 
   @Override
   public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -54,7 +76,7 @@ public final class CamCommand implements CEE_Command {
   private void executeCommand(CommandSourceStack context) {
     Attempt.create(() -> {
       ServerPlayer player = context.getPlayerOrException();
-      return new Tuple<>(player, Option.of(playerDataMap.get(player.getUUID())));
+      return new Pair<>(player, Option.of(playerDataMap.get(player.getUUID())));
     }).map(tuple -> tuple._2().fold(
       data -> exitFreecam(tuple._1(), data),
       () -> enterFreecam(tuple._1())
@@ -62,18 +84,17 @@ public final class CamCommand implements CEE_Command {
   }
 
   private Unit enterFreecam(ServerPlayer player) {
-    PreSpectatePlayerData data = new PreSpectatePlayerData(
-      player.getUUID(),
+    FreecamData data = new FreecamData(
       player.gameMode.getGameModeForPlayer(),
       player.position(),
       player.getRotationVector(),
-      (ServerLevel) player.level()
+      player.level().dimension()
     );
 
     playerDataMap.put(player.getUUID(), data);
     player.setGameMode(GameType.SPECTATOR);
     MessagingHelper.sendActionBarMessage(player,
-      new TextBuilder()
+      new TextBuffer()
         .addText("Gamemode: ", ChatFormatting.GOLD)
         .addText("SPECTATOR", ChatFormatting.WHITE)
         .build()
@@ -82,10 +103,13 @@ public final class CamCommand implements CEE_Command {
     return Unit;
   }
 
-  private Unit exitFreecam(ServerPlayer player, PreSpectatePlayerData data) {
-    player.setGameMode(data.originalGamemode());
+  private Unit exitFreecam(ServerPlayer player, FreecamData data) {
+    MinecraftServer server = CarpetExtraExtrasServer.getMinecraftServer()
+      .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"));
+
+    player.setGameMode(data.gamemode());
     player.teleportTo(
-      data.level(),
+      server.getLevel(data.level()),
       data.position().x(),
       data.position().y(),
       data.position().z(),
@@ -97,9 +121,9 @@ public final class CamCommand implements CEE_Command {
 
     playerDataMap.remove(player.getUUID());
     MessagingHelper.sendActionBarMessage(player,
-      new TextBuilder()
+      new TextBuffer()
         .addText("Gamemode: ", ChatFormatting.GOLD)
-        .addText(data.originalGamemode.getName().toUpperCase(), ChatFormatting.WHITE)
+        .addText(data.gamemode.getName().toUpperCase(), ChatFormatting.WHITE)
         .build()
     );
     return Unit;
@@ -115,5 +139,15 @@ public final class CamCommand implements CEE_Command {
     return Unit;
   }
 
-  private record PreSpectatePlayerData(UUID id, GameType originalGamemode, Vec3 position, Vec2 rotation, ServerLevel level) { }
+  public record FreecamData(GameType gamemode, Vec3 position, Vec2 rotation, ResourceKey<Level> level) {
+    public static final Codec<FreecamData> CODEC =
+      RecordCodecBuilder.create(instance ->
+        instance.group(
+          GameType.CODEC.fieldOf("gamemode").forGetter(FreecamData::gamemode),
+          Vec3.CODEC.fieldOf("position").forGetter(FreecamData::position),
+          Vec2.CODEC.fieldOf("rotation").forGetter(FreecamData::rotation),
+          ResourceKey.codec(Registries.DIMENSION).fieldOf("level").forGetter(FreecamData::level)
+        ).apply(instance, FreecamData::new)
+      );
+  }
 }

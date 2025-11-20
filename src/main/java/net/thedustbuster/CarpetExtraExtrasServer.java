@@ -9,12 +9,10 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.thedustbuster.commands.CEE_Command;
-import net.thedustbuster.commands.CamCommand;
+import net.thedustbuster.libs.core.classloading.ClassLoader;
+import net.thedustbuster.libs.func.option.Option;
 import net.thedustbuster.rules.CEE_Rule;
-import net.thedustbuster.rules.CarpetBotTeam;
-import net.thedustbuster.rules.PearlTracking;
-import net.thedustbuster.util.func.option.Option;
-import net.thedustbuster.util.minecraft.TickDelayManager;
+import net.thedustbuster.util.TickDelayManager;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,44 +26,36 @@ import java.util.List;
 import java.util.Map;
 
 public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitializer {
-  public static final Logger LOGGER = LoggerFactory.getLogger("carpet-extra-extras");
+  public static final String MOD_ID = "carpet-extra-extras";
+  public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
   private static final List<CEE_Rule> rules = new ArrayList<>();
   private static final List<CEE_Command> commands = new ArrayList<>();
-
-  private static void registerRule(CEE_Rule c) { rules.add(c); }
-  private static void registerCommand(CEE_Command c) { commands.add(c); }
+  public static void registerRule(CEE_Rule r) { rules.add(r); }
+  public static void registerCommand(CEE_Command c) { commands.add(c); }
 
   public static Option<MinecraftServer> getMinecraftServer() {
-    return Option.of(CarpetServer.minecraft_server)
-      .filter(MinecraftServer::isReady);
-  }
-
-  @Override
-  public String version() {
-    return "carpet-extra-extras";
+    return Option.of(CarpetServer.minecraft_server).filter(MinecraftServer::isReady);
   }
 
   @Override
   public void onInitialize() {
     CarpetServer.manageExtension(this);
 
-    /* Register Rules */
-    registerRule(CarpetBotTeam.INSTANCE);
-    registerRule(PearlTracking.INSTANCE);
+    /* Load rules and commands */
+    new ClassLoader("net.thedustbuster." + MOD_ID + ".rules").load();
+    new ClassLoader("net.thedustbuster." + MOD_ID + ".commands").load();
   }
 
   @Override
   public void onServerLoaded(MinecraftServer server) {
-    /* Register Commands */
-    registerCommand(CamCommand.INSTANCE);
-
+    /* Register commands */
     commands.forEach(c -> c.register(server.getCommands().getDispatcher()));
   }
 
   @Override
   public void onTick(MinecraftServer server) {
     rules.forEach(CEE_Rule::onTick);
-
     TickDelayManager.tick();
   }
 

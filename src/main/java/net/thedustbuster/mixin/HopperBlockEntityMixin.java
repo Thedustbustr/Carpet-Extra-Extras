@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class HopperBlockEntityMixin {
 
   @Redirect(
-          method = "tryMoveInItem",
-          at = @At(
-                  value = "INVOKE",
-                  target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;canMergeItems(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
-          )
+    method = "tryMoveInItem",
+    at = @At(
+      value = "INVOKE",
+      target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;canMergeItems(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
+    )
   )
   private static boolean injectTryMoveInItem(ItemStack stack1, ItemStack stack2, Container container, Container container2) {
     return ShulkerBoxStackLimit.canMergeItems(stack1, stack2, container2).getOrElse(canMergeItems(stack1, stack2));
