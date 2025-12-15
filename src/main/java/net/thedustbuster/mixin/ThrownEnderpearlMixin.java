@@ -6,9 +6,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.projectile.ThrownEnderpearl;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.CarpetExtraExtrasSettings;
@@ -26,7 +26,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   private long ticketTimer = 0L;
 
   @Unique
-  private ThrownEnderpearl getSelf() {
+  private ThrownEnderpearl self() {
     return (ThrownEnderpearl) (Object) this;
   }
 
@@ -58,14 +58,14 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
       Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
       Vec3 velocity = this.getDeltaMovement();
 
-      PearlTracking.updatePearl(this.getSelf(), position, velocity);
+      PearlTracking.updatePearl(self(), position, velocity);
     }
   }
 
   @Unique
   private void applyPre21Behavior(CallbackInfo info) {
     Entity entity = this.getOwner();
-    if (entity instanceof ServerPlayer && !entity.isAlive() && ((ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_ENDER_PEARLS_VANISH_ON_DEATH)) {
+    if (entity instanceof ServerPlayer && !entity.isAlive() && ((ServerLevel) this.level()).getGameRules().get(GameRules.ENDER_PEARLS_VANISH_ON_DEATH)) {
       this.discard();
       info.cancel(); // Cancel the rest of the original tick method
       return;
@@ -77,7 +77,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     super.tick();
 
     if (this.isAlive() && shouldRenewTicket(this.position(), this.getDeltaMovement(), previousX, previousZ) && entity instanceof ServerPlayer serverPlayer) {
-      this.ticketTimer = serverPlayer.registerAndUpdateEnderPearlTicket(this.getSelf());
+      this.ticketTimer = serverPlayer.registerAndUpdateEnderPearlTicket(self());
     }
 
     info.cancel(); // Cancel the rest of the original tick method
