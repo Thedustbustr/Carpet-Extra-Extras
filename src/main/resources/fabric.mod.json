@@ -8,7 +8,6 @@
     "Thedustbuster"
   ],
   "contact": {
-    "homepage": "https://thedustbuster.net/",
     "sources": "https://github.com/Thedustbustr/Carpet-Extra-Extras"
   },
   "license": "MIT",
@@ -23,7 +22,7 @@
     "carpet-extra-extras.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.18.2",
+    "fabricloader": ">=0.18",
     "minecraft": [
       "1.21.11"
     ],
