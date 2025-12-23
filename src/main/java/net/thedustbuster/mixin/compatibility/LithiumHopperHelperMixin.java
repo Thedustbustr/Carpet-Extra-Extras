@@ -1,8 +1,7 @@
 package net.thedustbuster.mixin.compatibility;
 
-import net.minecraft.core.Direction;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.thedustbuster.rules.ShulkerBoxStackLimit;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +20,7 @@ public class LithiumHopperHelperMixin {
       target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
     )
   )
-  private static boolean customMergeCheck(ItemStack stack1, ItemStack stack2, Container to, WorldlyContainer toSided, ItemStack transferStack, ItemStack transferChecker, int targetSlot, Direction fromDirection) {
-    return ShulkerBoxStackLimit.canMergeItems(stack1, stack2, to).getOrElse(true) && ItemStack.isSameItemSameComponents(stack1, stack2);
+  private static boolean customMergeCheck(ItemStack stack1, ItemStack stack2, @Local(argsOnly = true) Container container) {
+    return ShulkerBoxStackLimit.canMergeItems(stack1, stack2, container).getOrElse(true) && ItemStack.isSameItemSameComponents(stack1, stack2);
   }
 }
