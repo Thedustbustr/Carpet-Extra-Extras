@@ -3,57 +3,51 @@ plugins {
 }
 
 repositories {
-	maven {
-		url 'https://masa.dy.fi/maven'
-	}
-
-    maven {
-      url 'https://gitlab.com/api/v4/projects/76146809/packages/maven'
-    }
-
-    maven {
-      url 'https://gitlab.com/api/v4/projects/76147521/packages/maven'
-    }
+    maven { url 'https://masa.dy.fi/maven' }
+//  maven { url 'https://api.modrinth.com/maven' }
+    maven { url 'https://gitlab.com/api/v4/projects/76146809/packages/maven' }
+    maven { url 'https://gitlab.com/api/v4/projects/76147521/packages/maven' }
 }
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+    archivesName = project.archives_base_name
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.officialMojangMappings()
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
 
+    modImplementation "carpet:fabric-carpet:${project.carpet_version}"
+//  modImplementation "maven.modrinth:lithium:${project.lithium_version}-fabric"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "carpet:fabric-carpet:${project.carpet_core_version}"
 
     include implementation("net.thedustbuster.libs:core:${project.java_libs_core_version}")
     include implementation("net.thedustbuster.libs:func:${project.java_libs_functional_version}")
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+    it.options.release = 21
     options.compilerArgs << "-Xlint:deprecation"
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
-	}
+    from("LICENSE") {
+        rename { "${it}_${inputs.properties.archivesName}" }
+    }
 }
