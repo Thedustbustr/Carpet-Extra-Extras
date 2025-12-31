@@ -17,11 +17,14 @@ Restores 1.16.2-1.21.1 throwable entity (ender pearl, snowball, etc.) behavior, 
 * Categories: `FEATURE`, `LTS`
 
 ### optimizedTNTInteraction
+> [!NOTE]
+Any mod version prior to 1.2.8 will break certain contraptions relying on lazy tnt acceleration. For instance, [cubicmetre's Orbital Strike Cannon](https://www.youtube.com/watch?v=s_TKe16WASY) or [Dark's Mining Cannons](https://www.youtube.com/watch?v=5hq4TwvVp6o).
+
 Optimizes force calculations between exploding TNT entities. This can grant significant performance gains for Ender Pearl Cannons.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `OPTIMIZATION`
+* Categories: `FEATURE`, `EXPERIMENTAL`, `OPTIMIZATION`
 
 ### stackableShulkerLimitAllContainers
 > [!NOTE]

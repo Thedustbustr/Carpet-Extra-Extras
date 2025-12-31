@@ -57,7 +57,7 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { FEATURE, LTS, MOD })
   public static boolean pre21ThrowableEntityBehavior = false;
 
-  @Rule(categories = { FEATURE, OPTIMIZATION, MOD })
+  @Rule(categories = { FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD })
   public static boolean optimizedTNTInteraction = false;
 
   @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
