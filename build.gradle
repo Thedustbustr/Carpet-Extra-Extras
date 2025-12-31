@@ -4,7 +4,7 @@ plugins {
 
 repositories {
     maven { url 'https://masa.dy.fi/maven' }
-//  maven { url 'https://api.modrinth.com/maven' }
+    maven { url 'https://api.modrinth.com/maven' }
     maven { url 'https://gitlab.com/api/v4/projects/76146809/packages/maven' }
     maven { url 'https://gitlab.com/api/v4/projects/76147521/packages/maven' }
 }
@@ -21,7 +21,7 @@ dependencies {
     mappings loom.officialMojangMappings()
 
     modImplementation "carpet:fabric-carpet:${project.carpet_version}"
-//  modImplementation "maven.modrinth:lithium:${project.lithium_version}-fabric"
+    modImplementation "maven.modrinth:lithium:${project.lithium_version}-fabric"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     include implementation("net.thedustbuster.libs:core:${project.java_libs_core_version}")
