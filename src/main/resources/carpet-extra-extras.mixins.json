@@ -13,6 +13,7 @@
     "ThrowableProjectileMixin",
     "ThrownEnderpearlMixin",
     "compatibility.LithiumHopperHelperMixin",
+    "optimization.PrimedTntMixin",
     "optimization.ServerExplosionMixin"
   ],
   "injectors": {
