@@ -13,7 +13,6 @@ import net.thedustbuster.cee.server.rules.CEE_Rule;
 import net.thedustbuster.cee.server.util.Logger;
 import net.thedustbuster.cee.server.util.TickDelayManager;
 import net.thedustbuster.libs.core.classloading.ClassLoader;
-import net.thedustbuster.libs.func.Unit;
 import net.thedustbuster.libs.func.option.Option;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import static net.thedustbuster.libs.func.Unit.Unit;
 
@@ -42,7 +40,6 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   private static Option<MinecraftServer> getMinecraftServerUnsafe() {
     return Option.of(CarpetServer.minecraft_server);
   }
-
   public static Option<MinecraftServer> getMinecraftServer() {
     return getMinecraftServerUnsafe().filter(MinecraftServer::isReady);
   }
@@ -51,14 +48,19 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
     getMinecraftServer().fold(s -> Unit(() -> s.execute(() -> r.accept(s))), () -> Logger.warn("Attempted to run on a non-ready server thread."));
   }
 
+  // This should only be used for tasks that don't require the server to be entirely loaded (NOT worldgen)
+  public static void runOnServerThreadUnsafe(Consumer<MinecraftServer> r) {
+    getMinecraftServerUnsafe().fold(s -> Unit(() -> s.execute(() -> r.accept(s))), () -> Logger.warn("Attempted to run on a non-existent server thread."));
+  }
+
   public static void reloadCommands() {
-    getMinecraftServerUnsafe().whenDefined(server -> server.execute(() -> {
+    runOnServerThreadUnsafe(server -> {
       /* Register commands */
       commands.forEach(c -> c.register(server.getCommands().getDispatcher()));
 
       /* Provide commands to players */
       server.getPlayerList().getPlayers().forEach(p -> server.getCommands().sendCommands(p));
-    }));
+    });
   }
 
   @Override

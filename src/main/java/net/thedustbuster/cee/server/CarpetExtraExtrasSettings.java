@@ -24,6 +24,8 @@ public class CarpetExtraExtrasSettings {
   public static final int MAX_TEAM_PREFIX_LENGTH = 16;
 
   private static void updateTeam() {
+    // Prevents updating teams on startup
+    if (CarpetExtraExtrasServer.getMinecraftServer().isEmpty()) return;
     CarpetExtraExtrasServer.runOnServerThread(__ -> CarpetBotTeam.updateTeam());
   }
 
