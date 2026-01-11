@@ -106,3 +106,10 @@ Enables a freecam mode that can be used by using `/c` or `/cam`.
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `COMMAND`
+
+### commandPing
+Displays the user's ping by using `/ping`.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `COMMAND`

@@ -7,13 +7,9 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ServerExplosion;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
 import net.thedustbuster.cee.server.tags.LazyTntTag;
-import net.thedustbuster.libs.func.For;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import static net.thedustbuster.libs.func.collection.HList.$1;
-import static net.thedustbuster.libs.func.option.Option.instanceOf;
 
 @Mixin(ServerExplosion.class)
 public abstract class ServerExplosionMixin implements Explosion, LazyTntTag {
@@ -26,14 +22,13 @@ public abstract class ServerExplosionMixin implements Explosion, LazyTntTag {
   )
   /* Because the original if statement is negating, the redirected code here will also get negated, hence the inverse logic. */
   public boolean cee$ignoreExplosion(Entity entity, Explosion explosion) {
-    if (!CarpetExtraExtrasSettings.optimizedTNTInteraction) return entity.ignoreExplosion(this);
-    return For
-      .start(instanceOf(entity.level(), ServerLevel.class))
-      .flatMap(__ -> instanceOf(entity, PrimedTnt.class))
-      .flatMap(tnt -> instanceOf(tnt, LazyTntTag.class))
-      .yield((ltnt, hlist) ->
-        $1(hlist).getFuse() <= 1 && !ltnt.cee$spawnedInLazyChunk()
-      )
-      .getOrElse(entity.ignoreExplosion(this));
+    if (CarpetExtraExtrasSettings.optimizedTNTInteraction
+      && entity instanceof PrimedTnt tnt
+      && entity instanceof LazyTntTag ltnt
+      && entity.level() instanceof ServerLevel
+    ) return tnt.getFuse() <= 1 && !ltnt.cee$spawnedInLazyChunk();
+
+    // vanilla logic
+    return entity.ignoreExplosion(this);
   }
 }

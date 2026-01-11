@@ -21,12 +21,12 @@ import net.thedustbuster.cee.server.CarpetExtraExtrasServer;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
 import net.thedustbuster.cee.server.adaptors.minecraft.MessagingHelper;
 import net.thedustbuster.cee.server.adaptors.minecraft.text.TextBuffer;
+import net.thedustbuster.cee.server.util.Logger;
 import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
 import net.thedustbuster.libs.core.tuple.Pair;
 import net.thedustbuster.libs.func.Attempt;
 import net.thedustbuster.libs.func.Unit;
 import net.thedustbuster.libs.func.option.Option;
-import net.thedustbuster.cee.server.util.Logger;
 
 import java.util.EnumSet;
 import java.util.HashMap;

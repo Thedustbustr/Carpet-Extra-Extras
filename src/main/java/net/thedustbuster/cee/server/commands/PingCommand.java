@@ -30,8 +30,7 @@ public final class PingCommand implements CEE_Command {
 
   private int executeCommand(CommandSourceStack context) {
     Option(context.getPlayer()).whenDefined(player -> {
-      int ping = player.connection.latency();
-      context.sendSuccess(() -> text("Your ping: " + ping + " ms"), false);
+      context.sendSuccess(() -> text("Your ping: " + player.connection.latency() +" ms"),false);
     });
 
     return 1;

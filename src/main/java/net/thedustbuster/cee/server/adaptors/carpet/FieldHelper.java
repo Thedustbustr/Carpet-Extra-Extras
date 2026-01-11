@@ -1,8 +1,8 @@
 package net.thedustbuster.cee.server.adaptors.carpet;
 
+import net.thedustbuster.cee.server.util.Logger;
 import net.thedustbuster.libs.func.Attempt;
 import net.thedustbuster.libs.func.option.Option;
-import net.thedustbuster.cee.server.util.Logger;
 
 import java.lang.reflect.Field;
 
