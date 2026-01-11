@@ -12,5 +12,6 @@
   "carpet.rule.carpetBotTeamPrefix.desc": "The prefix of the team the carpet bots/fake will use.",
   "carpet.rule.carpetBotTeamColor.desc": "The color the team for the carpet bots/fake will use.",
   "carpet.rule.carpetBotTeamPrefixColor.desc": "The color of the prefix of the team the carpet bots/fake will use.",
-  "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`."
+  "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`.",
+  "carpet.rule.commandPing.desc": "Displays the user's ping by using `/ping`."
 }

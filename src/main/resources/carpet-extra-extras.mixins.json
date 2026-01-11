@@ -1,20 +1,20 @@
 {
   "required": true,
-  "package": "net.thedustbuster.mixin",
+  "package": "net.thedustbuster.cee.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "HopperBlockEntityMixin",
-    "HUDControllerMixin",
-    "LoggerRegistryMixin",
-    "ProjectileAccessor",
-    "ProjectileMixin",
-    "ServerPlayerMixin",
-    "SleepStatusMixin",
-    "ThrowableProjectileMixin",
-    "ThrownEnderpearlMixin",
-    "compatibility.LithiumHopperHelperMixin",
-    "optimization.PrimedTntMixin",
-    "optimization.ServerExplosionMixin"
+    "server.HopperBlockEntityMixin",
+    "server.HUDControllerMixin",
+    "server.LoggerRegistryMixin",
+    "server.ProjectileAccessor",
+    "server.ProjectileMixin",
+    "server.ServerPlayerMixin",
+    "server.SleepStatusMixin",
+    "server.ThrowableProjectileMixin",
+    "server.ThrownEnderpearlMixin",
+    "server.compatibility.LithiumHopperHelperMixin",
+    "server.optimization.PrimedTntMixin",
+    "server.optimization.ServerExplosionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

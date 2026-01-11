@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.thedustbuster.CarpetExtraExtrasServer"
+      "net.thedustbuster.cee.server.CarpetExtraExtrasServer"
     ]
   },
   "mixins": [
