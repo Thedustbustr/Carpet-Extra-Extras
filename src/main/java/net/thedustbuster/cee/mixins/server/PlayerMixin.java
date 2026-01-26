@@ -18,7 +18,7 @@ public abstract class PlayerMixin {
       target = "Lnet/minecraft/world/entity/player/Player;getTeam()Lnet/minecraft/world/scores/PlayerTeam;"
     )
   )
-  private PlayerTeam fixJoinMsg(Player p) {
+  private PlayerTeam cee$fixJoinMsg(Player p) {
     if (CarpetExtraExtrasSettings.carpetBotTeam && p instanceof EntityPlayerMPFake) return CarpetBotTeam.getTeam();
     return p.getTeam();
   }
