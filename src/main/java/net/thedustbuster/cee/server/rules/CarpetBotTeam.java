@@ -4,6 +4,7 @@ import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -23,11 +24,11 @@ import static net.thedustbuster.libs.func.option.None.None;
 
 @LoadAtRuntime
 public final class CarpetBotTeam implements CEE_Rule {
-  private static final CarpetBotTeam SELF = new CarpetBotTeam();
+  private static final CarpetBotTeam INSTANCE = new CarpetBotTeam();
   private CarpetBotTeam() { }
 
   static {
-    CarpetExtraExtrasServer.registerRule(SELF);
+    CarpetExtraExtrasServer.registerRule(INSTANCE);
   }
 
   @Override
@@ -56,8 +57,21 @@ public final class CarpetBotTeam implements CEE_Rule {
     return getBotPlayers().size();
   }
 
+  public static int getActiveBots() {
+    return (int) getBotPlayers().stream()
+      .filter(b -> !b.isSpectator() && b.level().dimension() == ServerLevel.OVERWORLD)
+      .count();
+  }
+
+  public static PlayerTeam getTeam() {
+    return team.getOrElse(() -> {
+      updateTeam();
+      return team.getOrThrow(() -> new IllegalStateException("Failed to load carpet bot team"));
+    });
+  }
+
   private static Scoreboard getScoreboard() {
-    return Option.of(CarpetServer.minecraft_server)
+    return CarpetExtraExtrasServer.getMinecraftServer()
       .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"))
       .getScoreboard();
   }
@@ -92,8 +106,8 @@ public final class CarpetBotTeam implements CEE_Rule {
   }
 
   private static Set<ServerPlayer> getBotPlayers() {
-    return Option.of(CarpetServer.minecraft_server)
-      .map(server -> StreamSupport.stream(server.getAllLevels().spliterator(), false)  // Convert Iterable to Stream
+    return CarpetExtraExtrasServer.getMinecraftServer()
+      .map(server -> StreamSupport.stream(server.getAllLevels().spliterator(), false)
         .flatMap(level -> level.players().stream())
         .filter(player -> player instanceof EntityPlayerMPFake)
         .collect(Collectors.toSet())

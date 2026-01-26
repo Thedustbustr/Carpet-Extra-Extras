@@ -97,7 +97,6 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   @Override
   public void onGameStarted() {
     CarpetServer.settingsManager.parseSettingsClass(CarpetExtraExtrasSettings.class);
-    rules.forEach(CEE_Rule::onGameStarted);
   }
 
   /* Taken from https://github.com/gnembon/carpet-extra/blob/master/src/main/java/carpetextra/utils/CarpetExtraTranslations.java# */

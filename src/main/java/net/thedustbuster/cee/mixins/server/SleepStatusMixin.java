@@ -20,7 +20,7 @@ public abstract class SleepStatusMixin {
   @Inject(method = "update", at = @At("TAIL"))
   private void cee$update(List<ServerPlayer> list, CallbackInfoReturnable<Boolean> infoReturnable) {
     if (CarpetExtraExtrasSettings.carpetBotsSkipNight) {
-      this.activePlayers = this.activePlayers - CarpetBotTeam.getBots();
+      this.activePlayers = this.activePlayers - CarpetBotTeam.getActiveBots();
     }
   }
 }

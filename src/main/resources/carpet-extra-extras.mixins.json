@@ -6,6 +6,7 @@
     "server.HopperBlockEntityMixin",
     "server.HUDControllerMixin",
     "server.LoggerRegistryMixin",
+    "server.PlayerMixin",
     "server.ProjectileAccessor",
     "server.ProjectileMixin",
     "server.ServerPlayerMixin",
