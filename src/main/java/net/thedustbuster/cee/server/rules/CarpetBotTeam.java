@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static net.thedustbuster.libs.func.option.None.None;
+import static net.thedustbuster.libs.func.option.Option.Option;
 
 @LoadAtRuntime
 public final class CarpetBotTeam implements CEE_Rule {
@@ -33,12 +34,7 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   @Override
   public void onPlayerLoggedIn(ServerPlayer player) {
-    if (player instanceof EntityPlayerMPFake) updateTeam();
-  }
-
-  @Override
-  public void onPlayerLoggedOut(ServerPlayer player) {
-    if (player instanceof EntityPlayerMPFake) updateTeam();
+    updateTeam();
   }
 
   public static Component[] createHUD() {
@@ -77,21 +73,17 @@ public final class CarpetBotTeam implements CEE_Rule {
   }
 
   public static void updateTeam() {
-    updateTeam(CarpetExtraExtrasSettings.carpetBotTeam);
-  }
-
-  public static void updateTeam(boolean carpetBotTeam) {
-    team = Option.of(getScoreboard().getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    team = Option(getScoreboard().getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
     team.whenDefined(t -> getScoreboard().removePlayerTeam(t));
 
-    if (carpetBotTeam) {
+    if (CarpetExtraExtrasSettings.carpetBotTeam) {
       CarpetBotTeam.createTeam();
       updatePlayers();
     }
   }
 
   private static void createTeam() {
-    team = Option.of(getScoreboard().addPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    team = Option(getScoreboard().addPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
     team.whenDefined(CarpetBotTeam::updateTeamProperties);
   }
 
