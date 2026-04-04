@@ -10,10 +10,10 @@ public final class ChunkHelper {
   }
 
   public static boolean isEntityTicking(ServerLevel lvl, int cx, int cz) {
-    return distanceManager(lvl).inEntityTickingRange(ChunkPos.asLong(cx, cz));
+    return distanceManager(lvl).inEntityTickingRange(ChunkPos.hash(cx, cz));
   }
 
   public static boolean isLazy(ServerLevel lvl, int cx, int cz) {
-    return distanceManager(lvl).inBlockTickingRange(ChunkPos.asLong(cx, cz)) && !isEntityTicking(lvl, cx, cz);
+    return distanceManager(lvl).inBlockTickingRange(ChunkPos.hash(cx, cz)) && !isEntityTicking(lvl, cx, cz);
   }
 }
