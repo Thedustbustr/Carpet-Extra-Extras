@@ -7,9 +7,17 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
+import net.thedustbuster.libs.core.tuple.Triple;
+import net.thedustbuster.libs.func.Attempt;
+import net.thedustbuster.libs.func.option.Option;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static net.thedustbuster.cee.server.CarpetExtraExtrasServer.getMinecraftServer;
+import static net.thedustbuster.libs.func.option.None.None;
 
 public class CarpetExtraExtrasSettings {
   public static final String MOD = "CarpetExtraExtras";
@@ -44,6 +52,32 @@ public class CarpetExtraExtrasSettings {
 
   public static int getStackableShulkerLimitDispensers() {
     return stackableShulkerLimitDispensersParsed;
+  }
+
+  public static List<Triple<String, String, Option<Integer>>> parseWarpDestinations() { return parseWarpDestinations(warpDestinations); }
+  private static List<Triple<String, String, Option<Integer>>> parseWarpDestinations(String str) {
+    if (str.equals("none")) return List.of();
+    List<Triple<String, String, Option<Integer>>> destinations = new ArrayList<>();
+
+    for (String destination : Arrays.stream(str.split(",")).map(String::trim).toList()) {
+      if (destination.isEmpty()) continue;
+
+      String[] aliasParts = destination.split("=", 2);
+      if (aliasParts.length != 2) return List.of();
+      String alias = aliasParts[0].trim();
+      String address = aliasParts[1].trim();
+
+      if (!address.contains(":")) {
+        destinations.add(new Triple<>(alias, address, None()));
+        continue;
+      }
+
+      String[] hostParts = address.split(":", 2);
+      Option<Integer> port = Attempt.create(() -> Integer.parseInt(hostParts[1])).toOption();
+      if (port.isEmpty()) return List.of();
+      destinations.add(new Triple<>(alias, hostParts[0], port));
+    }
+    return destinations;
   }
 
   // ###################### [ Rules ] ###################### \\
@@ -90,12 +124,18 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "none" }, strict = false, validators = WarpValidator.class)
+  public static String warpDestinations = "none";
+
   // ###################### [ Commands ] ###################### \\
   @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
   public static String commandCam = "false";
 
   @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
   public static String commandPing = "false";
+
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  public static String commandWarp = "false";
 
   // ###################### [ Validators ] ###################### \\
   private static class trackEnderPearlsValidator extends Validator<Boolean> {
@@ -182,6 +222,21 @@ public class CarpetExtraExtrasSettings {
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
       CarpetExtraExtrasServer.reloadCommands();
       return newValue;
+    }
+  }
+
+  private static class WarpValidator extends Validator<String> {
+    @Override
+    public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      if (newValue.equals("none")) return newValue;
+      List<Triple<String, String, Option<Integer>>> parsed = parseWarpDestinations(newValue);
+      System.out.println("here");
+      return parsed.isEmpty() ? null : newValue;
+    }
+
+    @Override
+    public String description() {
+      return "Comma-separated list of host or host:port entries, or 'none'. Example: play.example.net:25565,mc.example.net";
     }
   }
 }
