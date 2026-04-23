@@ -5,19 +5,13 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
-import net.thedustbuster.libs.core.tuple.Triple;
-import net.thedustbuster.libs.func.Attempt;
-import net.thedustbuster.libs.func.option.Option;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static net.thedustbuster.cee.server.CarpetExtraExtrasServer.getMinecraftServer;
-import static net.thedustbuster.libs.func.option.None.None;
+import static net.thedustbuster.cee.server.adaptors.minecraft.text.TextBuffer.text;
 
 public class CarpetExtraExtrasSettings {
   public static final String MOD = "CarpetExtraExtras";
@@ -34,7 +28,7 @@ public class CarpetExtraExtrasSettings {
   private static void updateTeam() {
     // Prevents updating teams on startup
     if (CarpetExtraExtrasServer.getMinecraftServer().isEmpty()) return;
-    CarpetExtraExtrasServer.runOnServerThread(__ -> CarpetBotTeam.updateTeam());
+    CarpetExtraExtrasServer.runOnServerThread(_ -> CarpetBotTeam.updateTeam());
   }
 
   // ###################### [ Type Conversion ] ###################### \\
@@ -52,32 +46,6 @@ public class CarpetExtraExtrasSettings {
 
   public static int getStackableShulkerLimitDispensers() {
     return stackableShulkerLimitDispensersParsed;
-  }
-
-  public static List<Triple<String, String, Option<Integer>>> parseWarpDestinations() { return parseWarpDestinations(warpDestinations); }
-  private static List<Triple<String, String, Option<Integer>>> parseWarpDestinations(String str) {
-    if (str.equals("none")) return List.of();
-    List<Triple<String, String, Option<Integer>>> destinations = new ArrayList<>();
-
-    for (String destination : Arrays.stream(str.split(",")).map(String::trim).toList()) {
-      if (destination.isEmpty()) continue;
-
-      String[] aliasParts = destination.split("=", 2);
-      if (aliasParts.length != 2) return List.of();
-      String alias = aliasParts[0].trim();
-      String address = aliasParts[1].trim();
-
-      if (!address.contains(":")) {
-        destinations.add(new Triple<>(alias, address, None()));
-        continue;
-      }
-
-      String[] hostParts = address.split(":", 2);
-      Option<Integer> port = Attempt.create(() -> Integer.parseInt(hostParts[1])).toOption();
-      if (port.isEmpty()) return List.of();
-      destinations.add(new Triple<>(alias, hostParts[0], port));
-    }
-    return destinations;
   }
 
   // ###################### [ Rules ] ###################### \\
@@ -228,10 +196,13 @@ public class CarpetExtraExtrasSettings {
   private static class WarpValidator extends Validator<String> {
     @Override
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      if (newValue.equals("none")) return newValue;
-      List<Triple<String, String, Option<Integer>>> parsed = parseWarpDestinations(newValue);
-      System.out.println("here");
-      return parsed.isEmpty() ? null : newValue;
+      return WarpCommand.parseWarpDestinations(newValue).fold(
+        err -> {
+          source.sendFailure(text(err));
+          return null;
+        },
+        _ -> newValue
+      );
     }
 
     @Override
