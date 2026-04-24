@@ -61,8 +61,7 @@ public final class WarpCommand implements CEE_Command {
           source.sendFailure(text(err));
           return 0;
         },
-        destinations -> destinations.stream()
-          .filter(d -> d.match((a, _, _) -> a.equals(alias))).findFirst()
+        destinations -> Option.of(destinations.stream().filter(d -> d.match((a, _, _) -> a.equals(alias))).findFirst())
           .map(d -> d.match((_, hostname, port) -> {
             MessagingHelper.sendActionBarMessage(player,
               new TextBuffer()
@@ -70,10 +69,13 @@ public final class WarpCommand implements CEE_Command {
                 .addText(hostname, ChatFormatting.WHITE)
                 .build()
             );
-            
+
             player.connection.send(new ClientboundTransferPacket(hostname, port.getOrElse(25565)));
             return 1;
-          })).orElse(0)
+          })).getOrElse(() -> {
+            source.sendFailure(text(String.format("Invalid destination '%s'", alias), ChatFormatting.RED));
+            return 0;
+          })
       );
     }).getOrHandle(_ -> 0);
   }
@@ -93,8 +95,8 @@ public final class WarpCommand implements CEE_Command {
     for (String part : destinationsStr.split(",")) {
       if (part.isBlank()) continue;
       var parsed = parseWarpDestination(part);
-      if (parsed.isLeft()) return Left(parsed.left().get());
-      destinations.add(parsed.right().get());
+      if (parsed.isLeft()) return Left(parsed.getLeft());
+      destinations.add(parsed.getRight());
     }
     return Right(destinations);
   }
