@@ -56,16 +56,19 @@ public final class WarpCommand implements CEE_Command {
   private int executeCommand(CommandSourceStack source, String alias) {
     return Attempt.create(() -> {
       ServerPlayer player = source.getPlayerOrException();
+      if (!source.getServer().isDedicatedServer()) {
+        source.sendFailure(text("This command can only be used on a dedicated server", ChatFormatting.RED));
+        return 0;
+      }
+
       return parseWarpDestinations().fold(
-        err -> {
-          source.sendFailure(text(err));
-          return 0;
-        },
+        err -> { source.sendFailure(text(err, ChatFormatting.RED)); return 0; },
         destinations -> Option.of(destinations.stream().filter(d -> d.match((a, _, _) -> a.equals(alias))).findFirst())
           .map(d -> d.match((_, hostname, port) -> {
             MessagingHelper.sendActionBarMessage(player,
               new TextBuffer()
-                .addText("Warping -> ", ChatFormatting.DARK_AQUA)
+                .addText("Warping", ChatFormatting.DARK_AQUA)
+                .addText(" -> ", ChatFormatting.GRAY)
                 .addText(hostname, ChatFormatting.WHITE)
                 .build()
             );
@@ -73,7 +76,7 @@ public final class WarpCommand implements CEE_Command {
             player.connection.send(new ClientboundTransferPacket(hostname, port.getOrElse(25565)));
             return 1;
           })).getOrElse(() -> {
-            source.sendFailure(text(String.format("Invalid destination '%s'", alias), ChatFormatting.RED));
+            source.sendFailure(text("Invalid destination '%s'".formatted(alias), ChatFormatting.RED));
             return 0;
           })
       );
@@ -104,7 +107,7 @@ public final class WarpCommand implements CEE_Command {
   private static final Pattern DESTINATION_PATTERN = Pattern.compile("^([^=]+)=([^:]+)(?::(\\d+))?$");
   private static Either<String, Triple<String, String, Option<Integer>>> parseWarpDestination(String s) {
     Matcher m = DESTINATION_PATTERN.matcher(s.trim());
-    if (!m.matches()) return Left(String.format("Invalid destination '%s'", s));
+    if (!m.matches()) return Left("Invalid destination '%s'".formatted(s));
 
     String alias = m.group(1).trim();
     String host = m.group(2).trim();

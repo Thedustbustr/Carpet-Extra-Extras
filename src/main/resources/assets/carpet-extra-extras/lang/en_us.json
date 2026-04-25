@@ -12,8 +12,8 @@
   "carpet.rule.carpetBotTeamPrefix.desc": "The prefix of the team the carpet bots/fake will use.",
   "carpet.rule.carpetBotTeamColor.desc": "The color the team for the carpet bots/fake will use.",
   "carpet.rule.carpetBotTeamPrefixColor.desc": "The color of the prefix of the team the carpet bots/fake will use.",
-  "carpet.rule.warpDestinations.desc": "A comma-separated list of warp destinations in the format `alias=host` or `alias=host:port`. Set the value to `none` to disable. Requires `commandWarp` to be enabled. Example: `lobby=play.example.net:25565,survival=mc.example.net`",
+  "carpet.rule.warpDestinations.desc": "A comma-separated list of warp destinations in the format `alias=host` or `alias=host:port`. Set the value to `none` to disable. *Note: This will only work on a dedicated server; Requires `commandWarp` to be enabled. Example: `lobby=play.example.net:25565,survival=mc.example.net`",
   "carpet.rule.commandCam.desc": "Enables a freecam mode that can be used by using `/c` or `/cam`.",
   "carpet.rule.commandPing.desc": "Displays the user's ping by using `/ping`.",
-  "carpet.rule.commandWarp.desc": "Enables the `/warp` command, allowing players to be transferred to another server from a list of configured destinations set by `warpDestinations`.\n*Note: This will only work in multiplayer."
+  "carpet.rule.commandWarp.desc": "Enables the `/warp` command, allowing players to be transferred to another server from a list of configured destinations set by `warpDestinations`.\n*Note: This will only work on a dedicated server."
 }
