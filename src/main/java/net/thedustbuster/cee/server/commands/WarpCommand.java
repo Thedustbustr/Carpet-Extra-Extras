@@ -14,6 +14,7 @@ import net.thedustbuster.cee.server.CarpetExtraExtrasServer;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
 import net.thedustbuster.cee.server.adaptors.minecraft.MessagingHelper;
 import net.thedustbuster.cee.server.adaptors.minecraft.text.TextBuffer;
+import net.thedustbuster.cee.server.util.TickDelayManager;
 import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
 import net.thedustbuster.libs.core.tuple.Triple;
 import net.thedustbuster.libs.func.Attempt;
@@ -73,7 +74,7 @@ public final class WarpCommand implements CEE_Command {
                 .build()
             );
 
-            player.connection.send(new ClientboundTransferPacket(hostname, port.getOrElse(25565)));
+            TickDelayManager.executeIn(5, () -> player.connection.send(new ClientboundTransferPacket(hostname, port.getOrElse(25565))));
             return 1;
           })).getOrElse(() -> {
             source.sendFailure(text("Invalid destination '%s'".formatted(alias), ChatFormatting.RED));
