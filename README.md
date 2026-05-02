@@ -101,7 +101,7 @@ The color of the prefix of the team the carpet bots/fake will use.
 
 ### warpDestinations
 > [!NOTE]
-This will only work on a dedicated server; Requires `commandWarp` to be enabled. 
+This will only work on a dedicated server; Requires `commandWarp` to be enabled; Receiving servers must have `accepts-transfers=true` in their `server.properties` file.
 
 A comma-separated list of warp destinations in the format `alias=host` or `alias=host:port`. Set the value to `none` to disable. 
 
