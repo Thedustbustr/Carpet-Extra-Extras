@@ -5,11 +5,13 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
 import org.jetbrains.annotations.Nullable;
 
 import static net.thedustbuster.cee.server.CarpetExtraExtrasServer.getMinecraftServer;
+import static net.thedustbuster.cee.server.adaptors.minecraft.text.TextBuffer.text;
 
 public class CarpetExtraExtrasSettings {
   public static final String MOD = "CarpetExtraExtras";
@@ -26,7 +28,7 @@ public class CarpetExtraExtrasSettings {
   private static void updateTeam() {
     // Prevents updating teams on startup
     if (CarpetExtraExtrasServer.getMinecraftServer().isEmpty()) return;
-    CarpetExtraExtrasServer.runOnServerThread(__ -> CarpetBotTeam.updateTeam());
+    CarpetExtraExtrasServer.runOnServerThread(_ -> CarpetBotTeam.updateTeam());
   }
 
   // ###################### [ Type Conversion ] ###################### \\
@@ -47,55 +49,61 @@ public class CarpetExtraExtrasSettings {
   }
 
   // ###################### [ Rules ] ###################### \\
-  @Rule(categories = { VANILLA, MOD }, validators = trackEnderPearlsValidator.class)
+  @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = { FEATURE, LTS, MOD })
+  @Rule(categories = {FEATURE, LTS, MOD})
   public static boolean pre21ThrowableEntityBehavior = false;
 
-  @Rule(categories = { FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD })
+  @Rule(categories = {FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD})
   public static boolean optimizedTNTInteraction = false;
 
-  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";
   private static int stackableShulkerLimitAllContainersParsed = -1;
 
-  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitHoppers = "false";
   private static int stackableShulkerLimitHoppersParsed = -1;
 
-  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDroppers = "false";
   private static int stackableShulkerLimitDroppersParsed = -1;
 
-  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDispensers = "false";
   private static int stackableShulkerLimitDispensersParsed = -1;
 
-  @Rule(categories = { FEATURE, MOD })
+  @Rule(categories = {FEATURE, MOD})
   public static boolean carpetBotsSkipNight = false;
 
-  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamValidator.class)
   public static boolean carpetBotTeam = false;
 
-  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamNameValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamNameValidator.class)
   public static String carpetBotTeamName = "cee_bots";
 
-  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamPrefixValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamPrefixValidator.class)
   public static String carpetBotTeamPrefix = "[Bot]";
 
-  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamColor = ChatFormatting.GRAY;
 
-  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
+  @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"none"}, strict = false, validators = WarpValidator.class)
+  public static String warpDestinations = "none";
+
   // ###################### [ Commands ] ###################### \\
-  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
   public static String commandCam = "false";
 
-  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
   public static String commandPing = "false";
+
+  @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
+  public static String commandWarp = "false";
 
   // ###################### [ Validators ] ###################### \\
   private static class trackEnderPearlsValidator extends Validator<Boolean> {
@@ -182,6 +190,21 @@ public class CarpetExtraExtrasSettings {
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
       CarpetExtraExtrasServer.reloadCommands();
       return newValue;
+    }
+  }
+
+  private static class WarpValidator extends Validator<String> {
+    @Override
+    public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      return WarpCommand.parseWarpDestinations(newValue).fold(
+        err -> { source.sendFailure(text(err)); return null; },
+        _ -> newValue
+      );
+    }
+
+    @Override
+    public String description() {
+      return "A comma-separated list of warp destinations in the format `alias=host` or `alias=host:port`. Set the value to `none` to disable. *Note: This will only work on a dedicated server; Requires `commandWarp` to be enabled. Example: `lobby=play.example.net:25565,survival=mc.example.net`";
     }
   }
 }

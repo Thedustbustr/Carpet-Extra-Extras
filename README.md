@@ -99,6 +99,18 @@ The color of the prefix of the team the carpet bots/fake will use.
 * Allowed options: `aqua`, `black`, `blue`, `bold`, `dark_aqua`, `dark_blue`, `dark_gray`, `dark_green`, `dark_purple`, `dark_red`, `gold`, `gray`, `green`, `italic`, `light_purple`, `obfuscated`, `red`, `reset`, `strikethrough`, `underline`, `white`, `yellow`
 * Categories: `FEATURE`
 
+### warpDestinations
+> [!NOTE]
+This will only work on a dedicated server; Requires `commandWarp` to be enabled; Receiving servers must have `accepts-transfers=true` in their `server.properties` file.
+
+A comma-separated list of warp destinations in the format `alias=host` or `alias=host:port`. Set the value to `none` to disable. 
+
+Example: `lobby=play.example.net:25565,survival=mc.example.net`
+* Type: `String`
+* Default value: `none`
+* Allowed options: `none`, `a comma-seperated list of destinations`
+* Categories: `FEATURE`, `EXPERIMENTAL`, `COMMAND`
+
 ## Carpet Extra Extras Commands:
 ### commandCam
 Enables a freecam mode that can be used by using `/c` or `/cam`.
@@ -113,3 +125,13 @@ Displays the user's ping by using `/ping`.
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `COMMAND`
+
+### commandWarp
+> [!NOTE]
+This will only work on a dedicated server.
+ 
+Enables the `/warp` command, allowing players to be transferred to another server from a list of configured destinations set by `warpDestinations`.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `EXPERIMENTAL`, `COMMAND`
