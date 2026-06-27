@@ -194,7 +194,6 @@ public class CarpetExtraExtrasSettings {
     }
   }
 
-
   private static class CommandValidator extends Validator<String> {
     @Override
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
