@@ -5,7 +5,6 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.world.scores.TeamColor;
 import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
@@ -88,9 +87,9 @@ public class CarpetExtraExtrasSettings {
   public static String carpetBotTeamPrefix = "[Bot]";
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
-  public static TeamColor carpetBotTeamColor = TeamColor.GRAY;
+  public static ChatFormatting carpetBotTeamColor = ChatFormatting.GRAY;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotChatFormattingValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
   @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"none"}, strict = false, validators = WarpValidator.class)
