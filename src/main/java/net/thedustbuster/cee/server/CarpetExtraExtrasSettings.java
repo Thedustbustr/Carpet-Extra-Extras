@@ -177,16 +177,9 @@ public class CarpetExtraExtrasSettings {
     }
   }
 
-  private static class CarpetBotTeamColorValidator extends Validator<TeamColor> {
+  private static class CarpetBotTeamColorValidator extends Validator<ChatFormatting> {
     @Override
-    public TeamColor validate(@Nullable CommandSourceStack source, CarpetRule<TeamColor> changingRule, TeamColor newValue, String userInput) {
-      updateTeam();
-      return newValue;
-    }
-  }
-
-  private static class CarpetBotChatFormattingValidator extends Validator<ChatFormatting> {
-    @Override public ChatFormatting validate(@Nullable CommandSourceStack source, CarpetRule<ChatFormatting> changingRule, ChatFormatting newValue, String userInput) {
+    public ChatFormatting validate(@Nullable CommandSourceStack source, CarpetRule<ChatFormatting> changingRule, ChatFormatting newValue, String userInput) {
       updateTeam();
       return newValue;
     }
