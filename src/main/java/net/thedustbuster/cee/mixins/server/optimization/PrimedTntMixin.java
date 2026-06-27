@@ -34,7 +34,7 @@ public abstract class PrimedTntMixin implements LazyTntTag {
       int cx = ((int) x) >> 4;
       int cz = ((int) z) >> 4;
 
-      this.cee$spawnedInLazyChunk = ChunkHelper.isLazy(lvl, cx, cz);
+      this.cee$spawnedInLazyChunk = ChunkHelper.isLazyTicking(lvl, cx, cz);
     }
   }
 }
