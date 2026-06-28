@@ -5,6 +5,7 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.scores.TeamColor;
 import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
@@ -87,9 +88,9 @@ public class CarpetExtraExtrasSettings {
   public static String carpetBotTeamPrefix = "[Bot]";
 
   @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
-  public static ChatFormatting carpetBotTeamColor = ChatFormatting.GRAY;
+  public static TeamColor carpetBotTeamColor = TeamColor.GRAY;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotChatFormattingValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
   @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"none"}, strict = false, validators = WarpValidator.class)
@@ -177,7 +178,15 @@ public class CarpetExtraExtrasSettings {
     }
   }
 
-  private static class CarpetBotTeamColorValidator extends Validator<ChatFormatting> {
+  private static class CarpetBotTeamColorValidator extends Validator<TeamColor> {
+    @Override
+    public TeamColor validate(@Nullable CommandSourceStack source, CarpetRule<TeamColor> changingRule, TeamColor newValue, String userInput) {
+      updateTeam();
+      return newValue;
+    }
+  }
+
+  private static class CarpetBotChatFormattingValidator extends Validator<ChatFormatting> {
     @Override
     public ChatFormatting validate(@Nullable CommandSourceStack source, CarpetRule<ChatFormatting> changingRule, ChatFormatting newValue, String userInput) {
       updateTeam();
