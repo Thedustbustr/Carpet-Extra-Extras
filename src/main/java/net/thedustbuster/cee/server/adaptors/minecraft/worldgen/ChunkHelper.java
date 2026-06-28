@@ -9,11 +9,15 @@ public final class ChunkHelper {
     return lvl.getChunkSource().chunkMap.getDistanceManager();
   }
 
-  public static boolean isEntityTicking(ServerLevel lvl, int cx, int cz) {
-    return distanceManager(lvl).inEntityTickingRange(ChunkPos.hash(cx, cz));
+  private static long getChunkKey(int x, int z) {
+    return ChunkPos.pack(x, z);
   }
 
-  public static boolean isLazy(ServerLevel lvl, int cx, int cz) {
-    return distanceManager(lvl).inBlockTickingRange(ChunkPos.hash(cx, cz)) && !isEntityTicking(lvl, cx, cz);
+  public static boolean isEntityTicking(ServerLevel lvl, int cx, int cz) {
+    return distanceManager(lvl).inEntityTickingRange(getChunkKey(cx, cz));
+  }
+
+  public static boolean isLazyTicking(ServerLevel lvl, int cx, int cz) {
+    return distanceManager(lvl).inBlockTickingRange(getChunkKey(cx, cz)) && !isEntityTicking(lvl, cx, cz);
   }
 }
