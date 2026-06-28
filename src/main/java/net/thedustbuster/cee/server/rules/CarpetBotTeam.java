@@ -16,7 +16,6 @@ import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
 import net.thedustbuster.libs.func.option.Option;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -90,7 +89,7 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   private static void updateTeamProperties(PlayerTeam team) {
     team.setPlayerPrefix(Component.literal(CarpetExtraExtrasSettings.carpetBotTeamPrefix + " ").withStyle(CarpetExtraExtrasSettings.carpetBotTeamPrefixColor));
-    team.setColor(Optional.of(CarpetExtraExtrasSettings.carpetBotTeamColor));
+    team.setColor(CarpetExtraExtrasSettings.carpetBotTeamColor);
   }
 
   private static void updatePlayers() {
