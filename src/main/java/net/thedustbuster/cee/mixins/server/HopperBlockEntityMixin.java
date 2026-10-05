@@ -18,8 +18,8 @@ public abstract class HopperBlockEntityMixin {
       target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;canMergeItems(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
     )
   )
-  private static boolean cee$injectTryMoveInItem(ItemStack stack1, ItemStack stack2, Container container, Container container2) {
-    return ShulkerBoxStackLimit.canMergeItems(stack1, stack2, container2).getOrElse(canMergeItems(stack1, stack2));
+  private static boolean cee$injectTryMoveInItem(ItemStack stack1, ItemStack stack2, Container container1, Container container2) {
+    return canMergeItems(stack1, stack2) && ShulkerBoxStackLimit.canStackShulker(stack1, stack2, container2).getOrElse(true);
   }
 
   @Shadow
