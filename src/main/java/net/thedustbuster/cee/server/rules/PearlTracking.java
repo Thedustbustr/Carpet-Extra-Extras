@@ -3,17 +3,34 @@ package net.thedustbuster.cee.server.rules;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl;
 import net.minecraft.world.phys.Vec3;
+import net.thedustbuster.cee.server.CarpetExtraExtrasServer;
 import net.thedustbuster.cee.server.adaptors.minecraft.text.TextBuffer;
+import net.thedustbuster.libs.core.classloading.LoadAtRuntime;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PearlTracking implements CEE_Rule {
+@LoadAtRuntime
+public final class PearlTracking implements CEE_Rule {
+  private static final PearlTracking INSTANCE = new PearlTracking();
+  private PearlTracking() { }
+
+  static {
+    CarpetExtraExtrasServer.registerRule(INSTANCE);
+  }
+
+  @Override
+  public void onServerLoaded(MinecraftServer server) {
+    // Clear state left over from a previous server instance
+    removedAllTrackedPearls();
+  }
+
   private static final Map<UUID, EnderPearlData> trackedEnderPearls = new HashMap<>();
 
   public static Map<UUID, EnderPearlData> getTrackedEnderPearls() {

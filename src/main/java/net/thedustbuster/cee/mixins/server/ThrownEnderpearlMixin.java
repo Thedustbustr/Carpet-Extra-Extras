@@ -49,6 +49,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 
   @Inject(method = "onRemoval", at = @At(value = "HEAD"))
   private void onRemoval(RemovalReason removalReason, CallbackInfo info) {
+    if (!(this.level() instanceof ServerLevel)) return;
     PearlTracking.removePearl(this.getUUID());
   }
 

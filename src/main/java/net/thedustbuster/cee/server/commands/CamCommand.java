@@ -45,14 +45,20 @@ public final class CamCommand implements CEE_Command {
     CarpetExtraExtrasServer.registerCommand(INSTANCE);
   }
 
-  private static final Map<UUID, FreecamData> playerDataMap = new HashMap<>();
+  private static final Map<UUID, FreecamData> playerData = new HashMap<>();
 
   public static Option<FreecamData> getPlayerData(UUID id) {
-    return Option.of(playerDataMap.get(id));
+    return Option.of(playerData.get(id));
   }
 
   public static void addPlayerData(UUID id, FreecamData data) {
-    playerDataMap.put(id, data);
+    playerData.put(id, data);
+  }
+
+  @Override
+  public void onServerLoaded(MinecraftServer server) {
+    // Clear state left over from a previous server instance
+    playerData.clear();
   }
 
   @Override
@@ -74,7 +80,7 @@ public final class CamCommand implements CEE_Command {
   private void executeCommand(CommandSourceStack context) {
     Attempt.create(() -> {
       ServerPlayer player = context.getPlayerOrException();
-      return new Pair<>(player, Option.of(playerDataMap.get(player.getUUID())));
+      return new Pair<>(player, Option.of(playerData.get(player.getUUID())));
     }).map(tuple -> tuple._2().fold(
       data -> exitFreecam(tuple._1(), data),
       () -> enterFreecam(tuple._1())
@@ -89,7 +95,7 @@ public final class CamCommand implements CEE_Command {
       player.level().dimension()
     );
 
-    playerDataMap.put(player.getUUID(), data);
+    playerData.put(player.getUUID(), data);
     player.setGameMode(GameType.SPECTATOR);
     MessagingHelper.sendActionBarMessage(player,
       new TextBuffer()
@@ -117,7 +123,7 @@ public final class CamCommand implements CEE_Command {
       true
     );
 
-    playerDataMap.remove(player.getUUID());
+    playerData.remove(player.getUUID());
     MessagingHelper.sendActionBarMessage(player,
       new TextBuffer()
         .addText("Gamemode: ", ChatFormatting.GOLD)

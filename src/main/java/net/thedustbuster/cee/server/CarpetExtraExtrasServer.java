@@ -59,9 +59,15 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   public void onInitialize() {
     CarpetServer.manageExtension(this);
 
-    /* Load rules and commands */
+    // Load rules and commands
     new ClassLoader("net.thedustbuster.cee.server.rules").load();
     new ClassLoader("net.thedustbuster.cee.server.commands").load();
+  }
+
+  @Override
+  public void onServerLoaded(MinecraftServer server) {
+    rules.forEach(rule -> rule.onServerLoaded(server));
+    commands.forEach(command -> command.onServerLoaded(server));
   }
 
   @Override
