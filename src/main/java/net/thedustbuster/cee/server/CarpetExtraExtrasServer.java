@@ -5,7 +5,10 @@ import carpet.CarpetServer;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.thedustbuster.cee.server.commands.CEE_Command;
@@ -48,21 +51,6 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
     getMinecraftServer().fold(s -> Unit(() -> s.execute(() -> r.accept(s))), () -> Logger.warn("Attempted to run on a non-ready server thread."));
   }
 
-  // This should only be used for tasks that don't require the server to be entirely loaded (NOT worldgen)
-  public static void runOnServerThreadUnsafe(Consumer<MinecraftServer> r) {
-    getMinecraftServerUnsafe().fold(s -> Unit(() -> s.execute(() -> r.accept(s))), () -> Logger.warn("Attempted to run on a non-existent server thread."));
-  }
-
-  public static void reloadCommands() {
-    runOnServerThreadUnsafe(server -> {
-      /* Register commands */
-      commands.forEach(c -> c.register(server.getCommands().getDispatcher()));
-
-      /* Provide commands to players */
-      server.getPlayerList().getPlayers().forEach(p -> server.getCommands().sendCommands(p));
-    });
-  }
-
   @Override
   public void onInitialize() {
     CarpetServer.manageExtension(this);
@@ -70,12 +58,6 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
     /* Load rules and commands */
     new ClassLoader("net.thedustbuster.cee.server.rules").load();
     new ClassLoader("net.thedustbuster.cee.server.commands").load();
-  }
-
-  @Override
-  public void onServerLoaded(MinecraftServer server) {
-    /* Register commands */
-    reloadCommands();
   }
 
   @Override
@@ -97,6 +79,11 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   @Override
   public void onGameStarted() {
     CarpetServer.settingsManager.parseSettingsClass(CarpetExtraExtrasSettings.class);
+  }
+
+  @Override
+  public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandBuildContext) {
+    commands.forEach(c -> c.register(dispatcher));
   }
 
   /* Taken from https://github.com/gnembon/carpet-extra/blob/master/src/main/java/carpetextra/utils/CarpetExtraTranslations.java# */

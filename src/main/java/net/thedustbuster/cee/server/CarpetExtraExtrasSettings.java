@@ -3,12 +3,14 @@ package net.thedustbuster.cee.server;
 import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
+import carpet.utils.CommandHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.scores.TeamColor;
 import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
+import net.thedustbuster.libs.func.option.Option;
 import org.jetbrains.annotations.Nullable;
 
 import static net.thedustbuster.cee.server.CarpetExtraExtrasServer.getMinecraftServer;
@@ -196,8 +198,8 @@ public class CarpetExtraExtrasSettings {
 
   private static class CommandValidator extends Validator<String> {
     @Override
-    public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      CarpetExtraExtrasServer.reloadCommands();
+    public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      Option.of(source).whenDefined(s -> CommandHelper.notifyPlayersCommandsChanged(s.getServer()));
       return newValue;
     }
   }
