@@ -26,6 +26,13 @@ Optimizes force calculations between exploding TNT entities. This can grant sign
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `EXPERIMENTAL`, `OPTIMIZATION`
 
+### tintedGlassHidesBeaconBeam
+Tinted glass placed anywhere above a beacon hides the beacon beam while the beacon remains active.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`
+
 ### stackableShulkerLimitAllContainers
 > [!NOTE]
 This overrides any other `stackableShulkerLimit` rule.

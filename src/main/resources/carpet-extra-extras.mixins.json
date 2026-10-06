@@ -1,8 +1,9 @@
 {
   "required": true,
   "package": "net.thedustbuster.cee.mixins",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "server.BeaconBlockEntityMixin",
     "server.HopperBlockEntityMixin",
     "server.HUDControllerMixin",
     "server.LoggerRegistryMixin",
