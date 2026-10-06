@@ -66,8 +66,8 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
 
   @Override
   public void onServerLoaded(MinecraftServer server) {
-    rules.forEach(rule -> rule.onServerLoaded(server));
-    commands.forEach(command -> command.onServerLoaded(server));
+    rules.forEach(CEE_Rule::onServerLoadedCleanup);
+    commands.forEach(CEE_Command::onServerLoadedCleanup);
   }
 
   @Override

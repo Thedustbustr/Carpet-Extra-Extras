@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
@@ -56,7 +57,7 @@ public final class CamCommand implements CEE_Command {
   }
 
   @Override
-  public void onServerLoaded(MinecraftServer server) {
+  public void onServerLoadedCleanup() {
     // Clear state left over from a previous server instance
     playerData.clear();
   }
@@ -111,9 +112,16 @@ public final class CamCommand implements CEE_Command {
     MinecraftServer server = CarpetExtraExtrasServer.getMinecraftServer()
       .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"));
 
+    // Resolve the level first so a missing dimension doesn't leave the player half restored
+    ServerLevel level = server.getLevel(data.level());
+    if (level == null) {
+      player.sendSystemMessage(TextBuffer.text("Unable to exit freecam: the dimension you entered it in no longer exists", ChatFormatting.RED));
+      return Unit;
+    }
+
     player.setGameMode(data.gamemode());
     player.teleportTo(
-      server.getLevel(data.level()),
+      level,
       data.position().x(),
       data.position().y(),
       data.position().z(),

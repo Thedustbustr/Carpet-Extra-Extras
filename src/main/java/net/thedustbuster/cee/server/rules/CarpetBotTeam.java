@@ -4,7 +4,6 @@ import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -50,14 +49,9 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   // ###################### [ Team ] ###################### \\
   private static Option<PlayerTeam> team = None();
+
   public static int getBots() {
     return getBotPlayers().size();
-  }
-
-  public static int getActiveBots() {
-    return (int) getBotPlayers().stream()
-      .filter(b -> !b.isSpectator() && b.level().dimension() == ServerLevel.OVERWORLD)
-      .count();
   }
 
   public static PlayerTeam getTeam() {

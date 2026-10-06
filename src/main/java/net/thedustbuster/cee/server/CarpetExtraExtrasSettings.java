@@ -3,14 +3,12 @@ package net.thedustbuster.cee.server;
 import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
-import carpet.utils.CommandHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.scores.TeamColor;
 import net.thedustbuster.cee.server.commands.WarpCommand;
 import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import net.thedustbuster.cee.server.rules.PearlTracking;
-import net.thedustbuster.libs.func.option.Option;
 import org.jetbrains.annotations.Nullable;
 
 import static net.thedustbuster.cee.server.CarpetExtraExtrasServer.getMinecraftServer;
@@ -95,17 +93,17 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { FEATURE, MOD }, validators = CarpetBotChatFormattingValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
-  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "none" }, strict = false, validators = WarpValidator.class)
+  @Rule(categories = { FEATURE, EXPERIMENTAL, MOD }, options = { "none" }, strict = false, validators = WarpValidator.class)
   public static String warpDestinations = "none";
 
   // ###################### [ Commands ] ###################### \\
-  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, COMMAND, MOD })
   public static String commandCam = "false";
 
-  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, COMMAND, MOD })
   public static String commandPing = "false";
 
-  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD })
   public static String commandWarp = "false";
 
   // ###################### [ Validators ] ###################### \\
@@ -198,20 +196,13 @@ public class CarpetExtraExtrasSettings {
     }
   }
 
-  private static class CommandValidator extends Validator<String> {
-    @Override
-    public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
-      Option.of(source).whenDefined(s -> CommandHelper.notifyPlayersCommandsChanged(s.getServer()));
-      return newValue;
-    }
-  }
-
   private static class WarpValidator extends Validator<String> {
     @Override
-    public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+    public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
       return WarpCommand.parseWarpDestinations(newValue).fold(
         err -> {
-          source.sendFailure(text(err));
+          // source is null when the rule is loaded from carpet.conf
+          if (source != null) source.sendFailure(text(err));
           return null;
         },
         _ -> newValue

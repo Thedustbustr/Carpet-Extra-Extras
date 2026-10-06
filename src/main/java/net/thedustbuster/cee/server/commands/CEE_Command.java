@@ -7,5 +7,5 @@ import net.minecraft.server.MinecraftServer;
 public interface CEE_Command {
   void register(CommandDispatcher<CommandSourceStack> dispatcher);
 
-  default void onServerLoaded(MinecraftServer server) { }
+  default void onServerLoadedCleanup() { }
 }

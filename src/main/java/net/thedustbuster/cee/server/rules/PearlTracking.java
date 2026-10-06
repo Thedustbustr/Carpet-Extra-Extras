@@ -26,7 +26,7 @@ public final class PearlTracking implements CEE_Rule {
   }
 
   @Override
-  public void onServerLoaded(MinecraftServer server) {
+  public void onServerLoadedCleanup() {
     // Clear state left over from a previous server instance
     removedAllTrackedPearls();
   }

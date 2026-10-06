@@ -1,9 +1,9 @@
 package net.thedustbuster.cee.mixins.server;
 
+import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
-import net.thedustbuster.cee.server.rules.CarpetBotTeam;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,8 @@ public abstract class SleepStatusMixin {
   @Inject(method = "update", at = @At("TAIL"))
   private void cee$update(List<ServerPlayer> list, CallbackInfoReturnable<Boolean> infoReturnable) {
     if (CarpetExtraExtrasSettings.carpetBotsSkipNight) {
-      this.activePlayers = this.activePlayers - CarpetBotTeam.getActiveBots();
+      // Each level has its own SleepStatus, so only count the bots it was just updated with
+      this.activePlayers -= (int) list.stream().filter(p -> p instanceof EntityPlayerMPFake && !p.isSpectator()).count();
     }
   }
 }

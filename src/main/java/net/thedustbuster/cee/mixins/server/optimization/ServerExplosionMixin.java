@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerExplosion.class)
-public abstract class ServerExplosionMixin implements Explosion, LazyTntTag {
+public abstract class ServerExplosionMixin implements Explosion {
   @Redirect(
     method = "hurtEntities",
     at = @At(
@@ -20,7 +20,7 @@ public abstract class ServerExplosionMixin implements Explosion, LazyTntTag {
       target = "Lnet/minecraft/world/entity/Entity;ignoreExplosion(Lnet/minecraft/world/level/Explosion;)Z"
     )
   )
-  /* Because the original if statement is negating, the redirected code here will also get negated, hence the inverse logic. */
+  // Because the original if statement is negating, the redirected code here will also get negated, hence the inverse logic.
   public boolean cee$ignoreExplosion(Entity entity, Explosion explosion) {
     if (CarpetExtraExtrasSettings.optimizedTNTInteraction
       && entity instanceof PrimedTnt tnt
