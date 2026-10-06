@@ -1,5 +1,6 @@
 package net.thedustbuster.cee.mixins.server.optimization;
 
+import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
@@ -31,8 +32,8 @@ public abstract class PrimedTntMixin implements LazyTntTag {
   private void cee$detectLazyChunk(Level level, double x, double y, double z, @Nullable LivingEntity livingEntity, CallbackInfo ci) {
     if (CarpetExtraExtrasSettings.optimizedTNTInteraction && level instanceof ServerLevel lvl) {
       // Convert to chunk coords
-      int cx = ((int) x) >> 4;
-      int cz = ((int) z) >> 4;
+      int cx = SectionPos.blockToSectionCoord(x);
+      int cz = SectionPos.blockToSectionCoord(z);
 
       this.cee$spawnedInLazyChunk = ChunkHelper.isLazyTicking(lvl, cx, cz);
     }
