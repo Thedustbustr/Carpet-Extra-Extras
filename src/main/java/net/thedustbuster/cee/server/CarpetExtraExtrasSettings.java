@@ -52,60 +52,60 @@ public class CarpetExtraExtrasSettings {
   }
 
   // ###################### [ Rules ] ###################### \\
-  @Rule(categories = {VANILLA, MOD}, validators = trackEnderPearlsValidator.class)
+  @Rule(categories = { VANILLA, MOD }, validators = trackEnderPearlsValidator.class)
   public static boolean trackEnderPearls = false;
 
-  @Rule(categories = {FEATURE, LTS, MOD})
+  @Rule(categories = { FEATURE, LTS, MOD })
   public static boolean pre21ThrowableEntityBehavior = false;
 
-  @Rule(categories = {FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD})
+  @Rule(categories = { FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD })
   public static boolean optimizedTNTInteraction = false;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";
   private static int stackableShulkerLimitAllContainersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitHoppers = "false";
   private static int stackableShulkerLimitHoppersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDroppers = "false";
   private static int stackableShulkerLimitDroppersParsed = -1;
 
-  @Rule(categories = {FEATURE, LTS, MOD}, options = {"false", "1", "16", "64"}, strict = false, validators = StackableShulkerValidator.class)
+  @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitDispensers = "false";
   private static int stackableShulkerLimitDispensersParsed = -1;
 
-  @Rule(categories = {FEATURE, MOD})
+  @Rule(categories = { FEATURE, MOD })
   public static boolean carpetBotsSkipNight = false;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamValidator.class)
   public static boolean carpetBotTeam = false;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamNameValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamNameValidator.class)
   public static String carpetBotTeamName = "cee_bots";
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamPrefixValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamPrefixValidator.class)
   public static String carpetBotTeamPrefix = "[Bot]";
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotTeamColorValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotTeamColorValidator.class)
   public static TeamColor carpetBotTeamColor = TeamColor.GRAY;
 
-  @Rule(categories = {FEATURE, MOD}, validators = CarpetBotChatFormattingValidator.class)
+  @Rule(categories = { FEATURE, MOD }, validators = CarpetBotChatFormattingValidator.class)
   public static ChatFormatting carpetBotTeamPrefixColor = ChatFormatting.GOLD;
 
-  @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"none"}, strict = false, validators = WarpValidator.class)
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "none" }, strict = false, validators = WarpValidator.class)
   public static String warpDestinations = "none";
 
   // ###################### [ Commands ] ###################### \\
-  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
   public static String commandCam = "false";
 
-  @Rule(categories = {FEATURE, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
   public static String commandPing = "false";
 
-  @Rule(categories = {FEATURE, EXPERIMENTAL, COMMAND, MOD}, options = {"true", "false", "ops", "0", "1", "2", "3", "4"}, validators = CommandValidator.class)
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = { "true", "false", "ops", "0", "1", "2", "3", "4" }, validators = CommandValidator.class)
   public static String commandWarp = "false";
 
   // ###################### [ Validators ] ###################### \\
@@ -157,8 +157,9 @@ public class CarpetExtraExtrasSettings {
   private static class CarpetBotTeamNameValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      if (newValue.length() > MAX_TEAM_NAME_LENGTH) return null;
       updateTeam();
-      return newValue.length() <= MAX_TEAM_NAME_LENGTH ? newValue : null;
+      return newValue;
     }
 
     @Override
@@ -170,8 +171,9 @@ public class CarpetExtraExtrasSettings {
   private static class CarpetBotTeamPrefixValidator extends Validator<String> {
     @Override
     public String validate(@Nullable CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
+      if (newValue.length() > MAX_TEAM_PREFIX_LENGTH) return null;
       updateTeam();
-      return newValue.length() <= MAX_TEAM_PREFIX_LENGTH ? newValue : null;
+      return newValue;
     }
 
     @Override
@@ -208,7 +210,10 @@ public class CarpetExtraExtrasSettings {
     @Override
     public String validate(CommandSourceStack source, CarpetRule<String> changingRule, String newValue, String userInput) {
       return WarpCommand.parseWarpDestinations(newValue).fold(
-        err -> { source.sendFailure(text(err)); return null; },
+        err -> {
+          source.sendFailure(text(err));
+          return null;
+        },
         _ -> newValue
       );
     }

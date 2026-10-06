@@ -74,8 +74,13 @@ public final class CarpetBotTeam implements CEE_Rule {
   }
 
   public static void updateTeam() {
-    team = Option(getScoreboard().getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
-    team.whenDefined(t -> getScoreboard().removePlayerTeam(t));
+    Scoreboard scoreboard = getScoreboard();
+
+    // The previous team may be registered under an old name if carpetBotTeamName changed
+    team.filter(t -> scoreboard.getPlayerTeam(t.getName()) == t).whenDefined(scoreboard::removePlayerTeam);
+
+    team = Option(scoreboard.getPlayerTeam(CarpetExtraExtrasSettings.carpetBotTeamName));
+    team.whenDefined(scoreboard::removePlayerTeam);
 
     if (CarpetExtraExtrasSettings.carpetBotTeam) {
       CarpetBotTeam.createTeam();

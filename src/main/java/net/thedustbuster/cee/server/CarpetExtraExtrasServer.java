@@ -10,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.thedustbuster.cee.server.commands.CEE_Command;
 import net.thedustbuster.cee.server.rules.CEE_Rule;
@@ -48,7 +49,10 @@ public final class CarpetExtraExtrasServer implements CarpetExtension, ModInitia
   }
 
   public static void runOnServerThread(Consumer<MinecraftServer> r) {
-    getMinecraftServer().fold(s -> Unit(() -> s.execute(() -> r.accept(s))), () -> Logger.warn("Attempted to run on a non-ready server thread."));
+    getMinecraftServer().fold(
+      s -> Unit(() -> s.schedule(new TickTask(s.getTickCount(), () -> r.accept(s)))),
+      () -> Logger.warn("Attempted to run on a non-ready server thread.")
+    );
   }
 
   @Override
