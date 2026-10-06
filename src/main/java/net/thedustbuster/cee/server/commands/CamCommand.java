@@ -39,7 +39,7 @@ import static net.thedustbuster.libs.func.Unit.Unit;
 
 @LoadAtRuntime
 public final class CamCommand implements CEE_Command {
-  public static final CamCommand INSTANCE = new CamCommand();
+  private static final CamCommand INSTANCE = new CamCommand();
   private CamCommand() { }
 
   static {

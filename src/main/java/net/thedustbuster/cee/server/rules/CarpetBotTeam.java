@@ -5,6 +5,7 @@ import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.thedustbuster.cee.server.CarpetExtraExtrasServer;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static net.thedustbuster.libs.func.option.None.None;
 import static net.thedustbuster.libs.func.option.Option.Option;
@@ -35,6 +35,10 @@ public final class CarpetBotTeam implements CEE_Rule {
   @Override
   public void onPlayerLoggedIn(ServerPlayer player) {
     updateTeam();
+  }
+
+  public static boolean isBot(Player player) {
+    return player instanceof EntityPlayerMPFake;
   }
 
   public static Component[] createHUD() {
@@ -77,7 +81,7 @@ public final class CarpetBotTeam implements CEE_Rule {
     team.whenDefined(scoreboard::removePlayerTeam);
 
     if (CarpetExtraExtrasSettings.carpetBotTeam) {
-      CarpetBotTeam.createTeam();
+      createTeam();
       updatePlayers();
     }
   }
@@ -99,11 +103,9 @@ public final class CarpetBotTeam implements CEE_Rule {
 
   private static Set<ServerPlayer> getBotPlayers() {
     return CarpetExtraExtrasServer.getMinecraftServer()
-      .map(server -> StreamSupport.stream(server.getAllLevels().spliterator(), false)
-        .flatMap(level -> level.players().stream())
-        .filter(player -> player instanceof EntityPlayerMPFake)
-        .collect(Collectors.toSet())
-      )
+      .map(server -> server.getPlayerList().getPlayers().stream()
+        .filter(CarpetBotTeam::isBot)
+        .collect(Collectors.toSet()))
       .getOrElse(Set.of());
   }
 }

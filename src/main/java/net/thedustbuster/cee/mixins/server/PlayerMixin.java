@@ -1,6 +1,5 @@
 package net.thedustbuster.cee.mixins.server;
 
-import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
@@ -19,7 +18,7 @@ public abstract class PlayerMixin {
     )
   )
   private PlayerTeam cee$fixJoinMsg(Player p) {
-    if (CarpetExtraExtrasSettings.carpetBotTeam && p instanceof EntityPlayerMPFake) return CarpetBotTeam.getTeam();
+    if (CarpetExtraExtrasSettings.carpetBotTeam && CarpetBotTeam.isBot(p)) return CarpetBotTeam.getTeam();
     return p.getTeam();
   }
 }
