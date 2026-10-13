@@ -33,6 +33,13 @@ Tinted glass placed anywhere above a beacon hides the beacon beam while the beac
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`
 
+### pistonPlayerClipFix
+Stops players from falling through blocks moved by pistons (e.g. flying machines).
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `BUGFIX`, `EXPERIMENTAL`
+
 ### stackableShulkerLimitAllContainers
 > [!NOTE]
 This overrides any other `stackableShulkerLimit` rule.

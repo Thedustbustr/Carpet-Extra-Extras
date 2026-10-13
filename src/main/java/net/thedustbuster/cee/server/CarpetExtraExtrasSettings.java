@@ -62,6 +62,9 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { FEATURE, MOD })
   public static boolean tintedGlassHidesBeaconBeam = false;
 
+  @Rule(categories = { BUGFIX, EXPERIMENTAL, MOD })
+  public static boolean pistonPushDesyncFix = false;
+
   @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";
   private static int stackableShulkerLimitAllContainersParsed = -1;
@@ -100,13 +103,13 @@ public class CarpetExtraExtrasSettings {
   public static String warpDestinations = "none";
 
   // ###################### [ Commands ] ###################### \\
-  @Rule(categories = { FEATURE, COMMAND, MOD })
+  @Rule(categories = { FEATURE, COMMAND, MOD }, options = {"true", "false", "ops", "0", "1", "2", "3", "4"})
   public static String commandCam = "false";
 
-  @Rule(categories = { FEATURE, COMMAND, MOD })
+  @Rule(categories = { FEATURE, COMMAND, MOD }, options = {"true", "false", "ops", "0", "1", "2", "3", "4"})
   public static String commandPing = "false";
 
-  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD })
+  @Rule(categories = { FEATURE, EXPERIMENTAL, COMMAND, MOD }, options = {"true", "false", "ops", "0", "1", "2", "3", "4"})
   public static String commandWarp = "false";
 
   // ###################### [ Validators ] ###################### \\
