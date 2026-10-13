@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.pistonpushdesync;
 
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

@@ -59,11 +59,11 @@ public class CarpetExtraExtrasSettings {
   @Rule(categories = { FEATURE, EXPERIMENTAL, OPTIMIZATION, MOD })
   public static boolean optimizedTNTInteraction = false;
 
-  @Rule(categories = { FEATURE, MOD })
-  public static boolean tintedGlassHidesBeaconBeam = false;
-
   @Rule(categories = { BUGFIX, EXPERIMENTAL, MOD })
   public static boolean pistonPushDesyncFix = false;
+
+  @Rule(categories = { FEATURE, MOD })
+  public static boolean tintedGlassHidesBeaconBeam = false;
 
   @Rule(categories = { FEATURE, LTS, MOD }, options = { "false", "1", "16", "64" }, strict = false, validators = StackableShulkerValidator.class)
   public static String stackableShulkerLimitAllContainers = "false";

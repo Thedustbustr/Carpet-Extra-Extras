@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server.compatibility;
+package net.thedustbuster.cee.mixins.server.rules.shulkerstacklimit;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Container;

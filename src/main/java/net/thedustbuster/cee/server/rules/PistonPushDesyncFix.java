@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.thedustbuster.cee.mixins.server.ServerGamePacketListenerImplAccessor;
+import net.thedustbuster.cee.mixins.server.rules.pistonpushdesync.ServerGamePacketListenerImplAccessor;
 import net.thedustbuster.cee.server.CarpetExtraExtrasServer;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
 import net.thedustbuster.libs.core.classloading.LoadAtRuntime;

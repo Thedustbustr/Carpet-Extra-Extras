@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.shulkerstacklimit;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;

@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.carpetbots;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;

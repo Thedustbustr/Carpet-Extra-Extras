@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.carpet;
 
 import carpet.logging.HUDController;
 import carpet.logging.LoggerRegistry;

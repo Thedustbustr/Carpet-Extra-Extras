@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server.optimization;
+package net.thedustbuster.cee.mixins.server.rules.tntoptimization;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

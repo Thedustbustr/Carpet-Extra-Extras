@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.pre21throwables;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.Vec3;
 import net.thedustbuster.cee.server.CarpetExtraExtrasSettings;
-import net.thedustbuster.cee.server.rules.PearlTracking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,36 +34,9 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
   }
 
   @Inject(method = "tick", at = @At(value = "HEAD"), cancellable = true)
-  private void cee$tick(CallbackInfo original) {
-    if (!(this.level() instanceof ServerLevel serverLevel)) return;
-
-    if (CarpetExtraExtrasSettings.trackEnderPearls) {
-      cee$updatePearlManager(original, serverLevel);
-    }
-
-    if (CarpetExtraExtrasSettings.pre21ThrowableEntityBehavior) {
-      cee$applyPre21Behavior(original);
-    }
-  }
-
-  @Inject(method = "onRemoval", at = @At(value = "HEAD"))
-  private void onRemoval(RemovalReason removalReason, CallbackInfo info) {
-    if (!(this.level() instanceof ServerLevel)) return;
-    PearlTracking.removePearl(this.getUUID());
-  }
-
-  @Unique
-  private void cee$updatePearlManager(CallbackInfo info, ServerLevel serverLevel) {
-    if (CarpetExtraExtrasSettings.trackEnderPearls) {
-      Vec3 position = new Vec3(this.getX(), this.getY(), this.getZ());
-      Vec3 velocity = this.getDeltaMovement();
-
-      PearlTracking.updatePearl(self(), position, velocity);
-    }
-  }
-
-  @Unique
   private void cee$applyPre21Behavior(CallbackInfo info) {
+    if (!(this.level() instanceof ServerLevel) || !CarpetExtraExtrasSettings.pre21ThrowableEntityBehavior) return;
+
     Entity entity = this.getOwner();
     if (entity instanceof ServerPlayer && !entity.isAlive() && ((ServerLevel) this.level()).getGameRules().get(GameRules.ENDER_PEARLS_VANISH_ON_DEATH)) {
       this.discard();
