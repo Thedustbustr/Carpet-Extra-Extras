@@ -26,7 +26,7 @@ Optimizes force calculations between exploding TNT entities. This can grant sign
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `EXPERIMENTAL`, `OPTIMIZATION`
 
-### pistonPlayerClipFix
+### pistonPushDesyncFix
 Stops players from falling through blocks moved by pistons (e.g. flying machines).
 * Type: `Boolean`
 * Default value: `false`
