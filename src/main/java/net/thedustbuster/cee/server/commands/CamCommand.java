@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
@@ -38,21 +39,27 @@ import static net.thedustbuster.libs.func.Unit.Unit;
 
 @LoadAtRuntime
 public final class CamCommand implements CEE_Command {
-  public static final CamCommand INSTANCE = new CamCommand();
+  private static final CamCommand INSTANCE = new CamCommand();
   private CamCommand() { }
 
   static {
     CarpetExtraExtrasServer.registerCommand(INSTANCE);
   }
 
-  private static final Map<UUID, FreecamData> playerDataMap = new HashMap<>();
+  private static final Map<UUID, FreecamData> playerData = new HashMap<>();
 
   public static Option<FreecamData> getPlayerData(UUID id) {
-    return Option.of(playerDataMap.get(id));
+    return Option.of(playerData.get(id));
   }
 
   public static void addPlayerData(UUID id, FreecamData data) {
-    playerDataMap.put(id, data);
+    playerData.put(id, data);
+  }
+
+  @Override
+  public void onServerLoadedCleanup() {
+    // Clear state left over from a previous server instance
+    playerData.clear();
   }
 
   @Override
@@ -74,7 +81,7 @@ public final class CamCommand implements CEE_Command {
   private void executeCommand(CommandSourceStack context) {
     Attempt.create(() -> {
       ServerPlayer player = context.getPlayerOrException();
-      return new Pair<>(player, Option.of(playerDataMap.get(player.getUUID())));
+      return new Pair<>(player, Option.of(playerData.get(player.getUUID())));
     }).map(tuple -> tuple._2().fold(
       data -> exitFreecam(tuple._1(), data),
       () -> enterFreecam(tuple._1())
@@ -89,7 +96,7 @@ public final class CamCommand implements CEE_Command {
       player.level().dimension()
     );
 
-    playerDataMap.put(player.getUUID(), data);
+    playerData.put(player.getUUID(), data);
     player.setGameMode(GameType.SPECTATOR);
     MessagingHelper.sendActionBarMessage(player,
       new TextBuffer()
@@ -105,9 +112,16 @@ public final class CamCommand implements CEE_Command {
     MinecraftServer server = CarpetExtraExtrasServer.getMinecraftServer()
       .getOrThrow(() -> new IllegalStateException("Minecraft Server is not ready"));
 
+    // Resolve the level first so a missing dimension doesn't leave the player half restored
+    ServerLevel level = server.getLevel(data.level());
+    if (level == null) {
+      player.sendSystemMessage(TextBuffer.text("Unable to exit freecam: the dimension you entered it in no longer exists", ChatFormatting.RED));
+      return Unit;
+    }
+
     player.setGameMode(data.gamemode());
     player.teleportTo(
-      server.getLevel(data.level()),
+      level,
       data.position().x(),
       data.position().y(),
       data.position().z(),
@@ -117,7 +131,7 @@ public final class CamCommand implements CEE_Command {
       true
     );
 
-    playerDataMap.remove(player.getUUID());
+    playerData.remove(player.getUUID());
     MessagingHelper.sendActionBarMessage(player,
       new TextBuffer()
         .addText("Gamemode: ", ChatFormatting.GOLD)

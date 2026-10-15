@@ -8,4 +8,6 @@ public interface CEE_Rule {
   default void onPlayerLoggedIn(ServerPlayer player) { }
 
   default void onPlayerLoggedOut(ServerPlayer player) { }
+
+  default void onServerLoadedCleanup() { }
 }

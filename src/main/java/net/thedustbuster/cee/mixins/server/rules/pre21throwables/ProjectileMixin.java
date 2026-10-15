@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.pre21throwables;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

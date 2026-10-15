@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server;
+package net.thedustbuster.cee.mixins.server.rules.carpetbots;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;
@@ -20,7 +20,7 @@ public abstract class SleepStatusMixin {
   @Inject(method = "update", at = @At("TAIL"))
   private void cee$update(List<ServerPlayer> list, CallbackInfoReturnable<Boolean> infoReturnable) {
     if (CarpetExtraExtrasSettings.carpetBotsSkipNight) {
-      this.activePlayers = this.activePlayers - CarpetBotTeam.getActiveBots();
+      this.activePlayers -= (int) list.stream().filter(p -> CarpetBotTeam.isBot(p) && !p.isSpectator()).count();
     }
   }
 }

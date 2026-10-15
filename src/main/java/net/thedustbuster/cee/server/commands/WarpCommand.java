@@ -36,7 +36,7 @@ import static net.thedustbuster.libs.func.Either.Right;
 
 @LoadAtRuntime
 public final class WarpCommand implements CEE_Command {
-  public static final WarpCommand INSTANCE = new WarpCommand();
+  private static final WarpCommand INSTANCE = new WarpCommand();
   private WarpCommand() { }
 
   static {

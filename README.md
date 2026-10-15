@@ -26,6 +26,20 @@ Optimizes force calculations between exploding TNT entities. This can grant sign
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `EXPERIMENTAL`, `OPTIMIZATION`
 
+### pistonPlayerClipFix
+Stops players from falling through blocks moved by pistons (e.g. flying machines).
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `BUGFIX`, `EXPERIMENTAL`
+
+### tintedGlassHidesBeaconBeam
+Tinted glass placed anywhere above a beacon hides the beacon beam while the beacon remains active.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`
+
 ### stackableShulkerLimitAllContainers
 > [!NOTE]
 This overrides any other `stackableShulkerLimit` rule.

@@ -1,4 +1,4 @@
-package net.thedustbuster.cee.mixins.server.compatibility;
+package net.thedustbuster.cee.mixins.server.rules.shulkerstacklimit;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Container;
@@ -20,7 +20,7 @@ public class LithiumHopperHelperMixin {
       target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
     )
   )
-  private static boolean cee$customMergeCheck(ItemStack stack1, ItemStack stack2, @Local(argsOnly = true) Container container) {
-    return ShulkerBoxStackLimit.canMergeItems(stack1, stack2, container).getOrElse(true) && ItemStack.isSameItemSameComponents(stack1, stack2);
+  private static boolean cee$customMergeCheck(ItemStack stack1, ItemStack stack2, @Local(argsOnly = true, name = "to") Container container) {
+    return ItemStack.isSameItemSameComponents(stack1, stack2) && ShulkerBoxStackLimit.canStackShulker(stack1, stack2, container).getOrElse(true);
   }
 }

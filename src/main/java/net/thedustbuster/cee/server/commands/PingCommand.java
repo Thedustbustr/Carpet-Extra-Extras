@@ -13,7 +13,7 @@ import static net.thedustbuster.libs.func.option.Option.Option;
 
 @LoadAtRuntime
 public final class PingCommand implements CEE_Command {
-  public static final PingCommand INSTANCE = new PingCommand();
+  private static final PingCommand INSTANCE = new PingCommand();
   private PingCommand() { }
 
   static {
